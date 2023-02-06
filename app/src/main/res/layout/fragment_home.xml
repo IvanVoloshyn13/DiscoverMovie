@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#E4000000"
+    tools:context="com.example.discovermovie.screens.home.HomeFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <ImageView
+            android:id="@+id/iv_movie_poster_big"
+            android:layout_width="match_parent"
+            android:layout_height="400dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_explore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="24dp"
+            android:elegantTextHeight="true"
+            android:text="@string/explore"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="italic"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_explore_movie_date_release"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginBottom="8dp"
+            android:elegantTextHeight="true"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="italic"
+            app:layout_constraintBottom_toBottomOf="@id/iv_movie_poster_big"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="Movie Date release" />
+
+        <TextView
+            android:id="@+id/tv_explore_movie_runtime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:elegantTextHeight="true"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="italic"
+            app:layout_constraintBottom_toBottomOf="@id/tv_explore_movie_date_release"
+            app:layout_constraintStart_toEndOf="@id/tv_explore_movie_date_release"
+            tools:text="Movie runtime" />
+
+        <TextView
+            android:id="@+id/tv_upcoming_movie"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="16dp"
+            android:elegantTextHeight="true"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="italic"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/iv_movie_poster_big"
+            tools:text="Upcomingr movies" />
+
+        <ImageButton
+            android:id="@+id/btt_to_upcoming_movies"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:background="#00000000"
+            android:src="@drawable/ic_arrow_forward"
+            android:visibility="visible"
+            app:layout_constraintBottom_toTopOf="@+id/rv_movie_upcoming"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tv_upcoming_movie" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_movie_upcoming"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintStart_toStartOf="@id/tv_upcoming_movie"
+            app:layout_constraintTop_toBottomOf="@id/tv_upcoming_movie"
+            tools:listitem="@layout/layout_movie_discover_item" />
+
+        <TextView
+            android:id="@+id/tv_now_playing_movie"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:elegantTextHeight="true"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="italic"
+            app:layout_constraintStart_toStartOf="@id/tv_upcoming_movie"
+            app:layout_constraintTop_toBottomOf="@+id/rv_movie_upcoming"
+            tools:text="Now Playing movies" />
+
+
+        <ImageButton
+            android:id="@+id/btt_to_now_playing_movies"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:layout_marginEnd="8dp"
+            android:background="#00000000"
+            android:src="@drawable/ic_arrow_forward"
+            android:visibility="visible"
+            app:layout_constraintBottom_toTopOf="@+id/rv_movie_now_playing"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tv_now_playing_movie" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_movie_now_playing"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintStart_toStartOf="@id/tv_now_playing_movie"
+            app:layout_constraintTop_toBottomOf="@id/tv_now_playing_movie"
+            tools:listitem="@layout/layout_movie_discover_item" />
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</ScrollView>
