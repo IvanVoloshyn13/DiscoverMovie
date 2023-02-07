@@ -20,7 +20,7 @@ class FavouriteAdapter : RecyclerView.Adapter<FavouriteAdapter.FavouriteViewHold
         fun bind(data: DatabaseMovieModel) {
             binding.apply {
                 Glide.with(itemView).load(
-                    BASE_IMAGE_URL + IMAGE_POSTER_SIZE_SMALL + data.poster_path
+                    data.poster_path
                 ).into(ivPosterSmall)
                 tvMovieTitle.text = data.original_title
             }
@@ -45,7 +45,7 @@ class FavouriteAdapter : RecyclerView.Adapter<FavouriteAdapter.FavouriteViewHold
 
     fun submitList(list: List<DatabaseMovieModel>) {
         favouriteMoviesList.clear()
-        favouriteMoviesList.addAll(list)
+        favouriteMoviesList.addAll(list.reversed())
         notifyDataSetChanged()
     }
 }

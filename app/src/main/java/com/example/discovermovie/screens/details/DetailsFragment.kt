@@ -1,20 +1,28 @@
 package com.example.discovermovie.screens.details
 
-//import android.support.v7.graphics.Palette
+
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
+import com.example.discovermovie.MoviesApplication
+import com.example.discovermovie.R
 import com.example.discovermovie.databinding.FragmentDetailsBinding
+import com.example.discovermovie.movieModels.DatabaseMovieModel
 import com.example.discovermovie.movieModels.details.Genre
+import com.example.discovermovie.repository.DatabaseMovieRepository
+import com.example.discovermovie.screens.favourite.FavouriteViewModel
+import com.example.discovermovie.screens.favourite.FavouriteViewModelProviderFactory
 import com.example.discovermovie.screens.home.HomeAdapter
 import com.example.discovermovie.util.BASE_IMAGE_URL
 import com.example.discovermovie.util.IMAGE_POSTER_SIZE_BIG
 import com.example.discovermovie.util.IMAGE_POSTER_SIZE_SMALL
 import com.example.discovermovie.util.Resource
+import kotlin.properties.Delegates
 
 
 class DetailsFragment : Fragment(), HomeAdapter.OnItemClickListener {
@@ -22,6 +30,10 @@ class DetailsFragment : Fragment(), HomeAdapter.OnItemClickListener {
     private lateinit var binding: FragmentDetailsBinding
     private lateinit var videoAdapter: VideoAdapter
     private lateinit var adapter: HomeAdapter
+    private var movieId by Delegates.notNull<Int>()
+
+    private lateinit var dbRepository: DatabaseMovieRepository
+    private lateinit var favouriteViewModel: FavouriteViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -29,12 +41,18 @@ class DetailsFragment : Fragment(), HomeAdapter.OnItemClickListener {
     ): View {
         // Inflate the layout for this fragment
         binding = FragmentDetailsBinding.inflate(layoutInflater)
-        val movieId = arguments?.getInt("MovieId") as Int
-        detailViewModel.getMovieDetail(movieId)
-        detailViewModel.getSimilarMovies(movieId)
-        detailViewModel.getImages(movieId)
         adapter = HomeAdapter(this)
-        videoAdapter = VideoAdapter()
+        movieId = arguments?.getInt("MovieId") as Int
+        val movieDb = MoviesApplication.movieDatabase
+        dbRepository = DatabaseMovieRepository(movieDb)
+        favouriteViewModel = viewModels<FavouriteViewModel> {
+            FavouriteViewModelProviderFactory(dbRepository = dbRepository)
+        }.value
+        detailViewModel.apply {
+            getMovieDetail(movieId)
+            getSimilarMovies(movieId)
+            getImages(movieId)
+        }
         observeSimilarMovies()
         setUpVideoRecycler()
         return binding.root
@@ -46,15 +64,15 @@ class DetailsFragment : Fragment(), HomeAdapter.OnItemClickListener {
             when (response) {
                 is Resource.Success -> {
                     binding.progressBar.visibility = View.INVISIBLE
-                    response.data!!.let {
-                        it.apply {
+                    response.data!!.let { detail ->
+                        detail.apply {
                             binding.apply {
                                 Glide.with(this@DetailsFragment)
                                     .load(BASE_IMAGE_URL + IMAGE_POSTER_SIZE_BIG + backdrop_path)
                                     .centerCrop()
                                     .into(ivPosterBig)
 
-
+                                // backgroundFromImage(backdrop_path)
 
                                 Glide.with(this@DetailsFragment)
                                     .load(BASE_IMAGE_URL + IMAGE_POSTER_SIZE_SMALL + poster_path)
@@ -67,18 +85,35 @@ class DetailsFragment : Fragment(), HomeAdapter.OnItemClickListener {
                                 tvMovieOverview.text = overview
                                 tvMovieGenre.text = getGenre(genres)
                             }
+
+                            binding.bttAddToFavourite.setOnClickListener {
+                                val movie = DatabaseMovieModel(
+                                    id = null,
+                                    movieId = detail.movieId,
+                                    original_title = detail.original_title,
+                                    poster_path = BASE_IMAGE_URL + IMAGE_POSTER_SIZE_BIG + poster_path,
+                                    status = status,
+                                    release_date = release_date
+                                )
+                                Log.d("DATABASE", movie.original_title)
+                                favouriteViewModel.addToFavourite(movie)
+                            }
                         }
                     }
                 }
                 is Resource.Loading -> binding.progressBar.visibility = View.VISIBLE
                 else -> {}
             }
-
-
         }
 
-
+        isFavourite(movieId) {
+            when (it) {
+                true -> binding.bttAddToFavourite.setImageResource(R.drawable.ic_is_favorite)
+                else -> {}
+            }
+        }
     }
+
 
     private fun observeSimilarMovies() {
         binding.rvSimilarMovies.adapter = adapter
@@ -87,7 +122,11 @@ class DetailsFragment : Fragment(), HomeAdapter.OnItemClickListener {
                 is Resource.Success -> {
                     binding.progressBar.visibility = View.INVISIBLE
                     response.data.let {
-                        adapter.submitList(it!!)
+                        if (it!!.isEmpty()) {
+                            binding.tvSimilarMovies.visibility = View.GONE
+                            binding.rvSimilarMovies.visibility == View.GONE
+                        } else
+                            adapter.submitList(it)
                     }
                 }
                 is Resource.Loading -> binding.progressBar.visibility = View.VISIBLE
@@ -98,6 +137,7 @@ class DetailsFragment : Fragment(), HomeAdapter.OnItemClickListener {
 
 
     private fun setUpVideoRecycler() {
+        videoAdapter = VideoAdapter()
         binding.rvTrailersImages.adapter = videoAdapter
         detailViewModel.imagesLiveData.observe(viewLifecycleOwner) {
             videoAdapter.submitList(it)
@@ -113,6 +153,46 @@ class DetailsFragment : Fragment(), HomeAdapter.OnItemClickListener {
         return genre!!.removeSuffix(",").removePrefix(null.toString())
     }
 
+    private fun isFavourite(movieId: Int, callback: (Boolean) -> Unit) {
+        var isFavourite = false
+        var favouriteMoviesList: List<DatabaseMovieModel>?
+        favouriteViewModel.getFavouriteMovies().observe(viewLifecycleOwner) {
+            favouriteMoviesList = it
+            if (favouriteMoviesList != null) {
+                for (elements in favouriteMoviesList!!) {
+                    if (elements.movieId == movieId) {
+                        isFavourite = true
+                    }
+                }
+            }
+            callback(isFavourite)
+        }
+
+    }
+
+//    fun backgroundFromImage(posterPath: String) {
+//        Glide.with(this@DetailsFragment)
+//            .asBitmap()
+//            .load("${BASE_IMAGE_URL + IMAGE_POSTER_SIZE_BIG + posterPath}")
+//            .into(object : CustomTarget<Bitmap>() {
+//                override fun onResourceReady(
+//                    resource: Bitmap,
+//                    transition: Transition<in Bitmap>?
+//                ) {
+//                    val palette = Palette.from(resource).generate()
+//                    val vibrant = palette.darkMutedSwatch
+//                    if (vibrant != null)
+//                        let { binding.detailLayout.setBackgroundColor(vibrant!!.rgb) }
+//
+//                }
+//
+//                override fun onLoadCleared(placeholder: Drawable?) {
+//                    onDestroy()
+//                }
+//
+//            })
+//    }
+
 
     companion object {
         @JvmStatic
@@ -123,28 +203,6 @@ class DetailsFragment : Fragment(), HomeAdapter.OnItemClickListener {
     override fun onItemClick(movieId: Int) {
         TODO("Not yet implemented")
     }
-
-//    fun backgroundFromImage() {
-//
-//        Glide.with(this@DetailsFragment)
-//            .asBitmap()
-//            .load("${BASE_IMAGE_URL + IMAGE_POSTER_SIZE_BIG + backdrop_path}")
-//            .into(object : CustomTarget<Bitmap>() {
-//                override fun onResourceReady(
-//                    resource: Bitmap,
-//                    transition: Transition<in Bitmap>?
-//                ) {
-//                    val palette = Palette.from(resource).generate()
-//                    val vibrant = palette.lightVibrantSwatch
-//                    binding.detailLayout.setBackgroundColor(vibrant!!.rgb)
-//                }
-//
-//                override fun onLoadCleared(placeholder: Drawable?) {
-//                    TODO("Not yet implemented")
-//                }
-//
-//            })
-//    }
 
 
 }
