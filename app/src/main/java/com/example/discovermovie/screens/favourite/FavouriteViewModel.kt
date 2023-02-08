@@ -22,5 +22,11 @@ class FavouriteViewModel(
         }
     }
 
+    fun deleteFromFavouriteByMovieID(movieId: Int) {
+        viewModelScope.launch {
+            dbRepository.deleteMovieById(movieId)
+        }
+    }
+
 
 }

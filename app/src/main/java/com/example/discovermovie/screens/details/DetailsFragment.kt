@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
@@ -22,6 +23,7 @@ import com.example.discovermovie.util.BASE_IMAGE_URL
 import com.example.discovermovie.util.IMAGE_POSTER_SIZE_BIG
 import com.example.discovermovie.util.IMAGE_POSTER_SIZE_SMALL
 import com.example.discovermovie.util.Resource
+import com.google.android.material.snackbar.Snackbar
 import kotlin.properties.Delegates
 
 
@@ -31,6 +33,7 @@ class DetailsFragment : Fragment(), HomeAdapter.OnItemClickListener {
     private lateinit var videoAdapter: VideoAdapter
     private lateinit var adapter: HomeAdapter
     private var movieId by Delegates.notNull<Int>()
+    private var movieIsInFavourite = false
 
     private lateinit var dbRepository: DatabaseMovieRepository
     private lateinit var favouriteViewModel: FavouriteViewModel
@@ -60,6 +63,48 @@ class DetailsFragment : Fragment(), HomeAdapter.OnItemClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setUiData()
+
+        binding.bttAddToFavourite.setOnClickListener {
+            if (movieIsInFavourite) {
+                favouriteViewModel.deleteFromFavouriteByMovieID(movieId)
+                Snackbar.make(
+                    requireView(),
+                    "Delete from favourite",
+                    Snackbar.LENGTH_SHORT
+                ).show()
+                isFavourite(movieId) {
+                    when (it) {
+                        true -> {
+                            binding.bttAddToFavourite.setImageResource(R.drawable.ic_add_favorite)
+                            movieIsInFavourite = false
+                        }
+                        else -> {}
+                    }
+                }
+
+            } else {
+                addToFavourite()
+                isFavourite(movieId) {
+                    when (it) {
+                        true -> binding.bttAddToFavourite.setImageResource(R.drawable.ic_is_favorite)
+                        else -> {}
+                    }
+                }
+            }
+        }
+
+        isFavourite(movieId) {
+            when (it) {
+                true -> binding.bttAddToFavourite.setImageResource(R.drawable.ic_is_favorite)
+                else -> {}
+            }
+        }
+
+    }
+
+
+    private fun setUiData() {
         detailViewModel.movieDetailLiveData.observe(viewLifecycleOwner) { response ->
             when (response) {
                 is Resource.Success -> {
@@ -85,19 +130,6 @@ class DetailsFragment : Fragment(), HomeAdapter.OnItemClickListener {
                                 tvMovieOverview.text = overview
                                 tvMovieGenre.text = getGenre(genres)
                             }
-
-                            binding.bttAddToFavourite.setOnClickListener {
-                                val movie = DatabaseMovieModel(
-                                    id = null,
-                                    movieId = detail.movieId,
-                                    original_title = detail.original_title,
-                                    poster_path = BASE_IMAGE_URL + IMAGE_POSTER_SIZE_BIG + poster_path,
-                                    status = status,
-                                    release_date = release_date
-                                )
-                                Log.d("DATABASE", movie.original_title)
-                                favouriteViewModel.addToFavourite(movie)
-                            }
                         }
                     }
                 }
@@ -106,10 +138,26 @@ class DetailsFragment : Fragment(), HomeAdapter.OnItemClickListener {
             }
         }
 
-        isFavourite(movieId) {
-            when (it) {
-                true -> binding.bttAddToFavourite.setImageResource(R.drawable.ic_is_favorite)
-                else -> {}
+    }
+
+    private fun addToFavourite() {
+        detailViewModel.movieDetailLiveData.observe(viewLifecycleOwner) { detailResponce ->
+            detailResponce.data?.apply {
+                val movie = DatabaseMovieModel(
+                    id = null,
+                    movieId = movieId,
+                    original_title = original_title,
+                    poster_path = BASE_IMAGE_URL + IMAGE_POSTER_SIZE_BIG + poster_path,
+                    status = status,
+                    release_date = release_date
+                )
+                Log.d("DATABASE", movie.original_title)
+                favouriteViewModel.addToFavourite(movie)
+                Snackbar.make(
+                    requireView(),
+                    "${movie.original_title} add to favourite",
+                    Snackbar.LENGTH_SHORT
+                ).show()
             }
         }
     }
@@ -153,21 +201,20 @@ class DetailsFragment : Fragment(), HomeAdapter.OnItemClickListener {
         return genre!!.removeSuffix(",").removePrefix(null.toString())
     }
 
-    private fun isFavourite(movieId: Int, callback: (Boolean) -> Unit) {
-        var isFavourite = false
+    private fun isFavourite(movieId: Int, callback: (Boolean) -> Unit): Boolean {
         var favouriteMoviesList: List<DatabaseMovieModel>?
         favouriteViewModel.getFavouriteMovies().observe(viewLifecycleOwner) {
             favouriteMoviesList = it
             if (favouriteMoviesList != null) {
                 for (elements in favouriteMoviesList!!) {
                     if (elements.movieId == movieId) {
-                        isFavourite = true
+                        movieIsInFavourite = true
                     }
                 }
             }
-            callback(isFavourite)
+            callback(movieIsInFavourite)
         }
-
+        return movieIsInFavourite
     }
 
 //    fun backgroundFromImage(posterPath: String) {

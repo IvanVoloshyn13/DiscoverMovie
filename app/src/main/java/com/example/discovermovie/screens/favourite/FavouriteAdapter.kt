@@ -23,6 +23,8 @@ class FavouriteAdapter : RecyclerView.Adapter<FavouriteAdapter.FavouriteViewHold
                     data.poster_path
                 ).into(ivPosterSmall)
                 tvMovieTitle.text = data.original_title
+                tvMovieStatus.text = data.status
+                tvMovieYearRealiseDate.text = data.release_date
             }
         }
 
@@ -45,7 +47,7 @@ class FavouriteAdapter : RecyclerView.Adapter<FavouriteAdapter.FavouriteViewHold
 
     fun submitList(list: List<DatabaseMovieModel>) {
         favouriteMoviesList.clear()
-        favouriteMoviesList.addAll(list.reversed())
+        favouriteMoviesList.addAll(list.asReversed())
         notifyDataSetChanged()
     }
 }

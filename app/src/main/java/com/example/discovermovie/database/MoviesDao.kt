@@ -13,6 +13,9 @@ interface MoviesDao {
     @Delete
     suspend fun deleteMovie(movie: DatabaseMovieModel)
 
+    @Query("DELETE FROM movies WHERE movieId=:movieId ")
+    suspend fun deleteMovieById(movieId: Int)
+
     @Query("SELECT * FROM movies ")
     fun getAllMovies(): LiveData<List<DatabaseMovieModel>>
 }
