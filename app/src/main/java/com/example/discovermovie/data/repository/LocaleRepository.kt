@@ -1,10 +1,10 @@
-package com.example.discovermovie.repository
+package com.example.discovermovie.data.repository
 
 import androidx.lifecycle.LiveData
 import com.example.discovermovie.database.MovieDatabase
-import com.example.discovermovie.movieModels.DatabaseMovieModel
+import com.example.discovermovie.data.movieModels.DatabaseMovieModel
 
-class DatabaseMovieRepository(
+class LocaleRepository(
     private val db: MovieDatabase
 ) {
 

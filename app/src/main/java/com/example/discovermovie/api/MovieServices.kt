@@ -1,15 +1,15 @@
 package com.example.discovermovie.api
 
-import com.example.discovermovie.movieModels.details.MovieDetailsModel
-import com.example.discovermovie.movieModels.images.ImagesResponse
-import com.example.discovermovie.movieModels.simpleMovieModel.MovieModelResponse
-import com.example.discovermovie.movieModels.videoModel.VideoResponse
+import com.example.discovermovie.data.movieModels.details.MovieDetailsModel
+import com.example.discovermovie.data.movieModels.images.ImagesResponse
+import com.example.discovermovie.data.movieModels.simpleMovieModel.MovieModelResponse
+import com.example.discovermovie.data.movieModels.videoModel.VideoResponse
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
 
-interface ApiCall {
+interface MovieServices {
 
     @GET("3/discover/movie")
     suspend fun discoverMovie(

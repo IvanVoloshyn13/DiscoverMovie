@@ -6,16 +6,17 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
 import com.example.discovermovie.MoviesApplication
 import com.example.discovermovie.R
 import com.example.discovermovie.databinding.FragmentDetailsBinding
-import com.example.discovermovie.movieModels.DatabaseMovieModel
-import com.example.discovermovie.movieModels.details.Genre
-import com.example.discovermovie.repository.DatabaseMovieRepository
+import com.example.discovermovie.data.movieModels.DatabaseMovieModel
+import com.example.discovermovie.data.movieModels.details.Genre
+import com.example.discovermovie.data.repository.DetailRepository
+import com.example.discovermovie.data.repository.LocaleRepository
+import com.example.discovermovie.data.repository.RemoteRepository
 import com.example.discovermovie.screens.favourite.FavouriteViewModel
 import com.example.discovermovie.screens.favourite.FavouriteViewModelProviderFactory
 import com.example.discovermovie.screens.home.HomeAdapter
@@ -28,15 +29,16 @@ import kotlin.properties.Delegates
 
 
 class DetailsFragment : Fragment(), HomeAdapter.OnItemClickListener {
-    private val detailViewModel: DetailViewModel by viewModels()
+    private lateinit var detailViewModel: DetailViewModel
     private lateinit var binding: FragmentDetailsBinding
     private lateinit var videoAdapter: VideoAdapter
     private lateinit var adapter: HomeAdapter
     private var movieId by Delegates.notNull<Int>()
     private var movieIsInFavourite = false
+    private lateinit var detailRepository: DetailRepository
+    private lateinit var remoteRepository: RemoteRepository
+    private lateinit var localeRepository: LocaleRepository
 
-    private lateinit var dbRepository: DatabaseMovieRepository
-    private lateinit var favouriteViewModel: FavouriteViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -47,10 +49,13 @@ class DetailsFragment : Fragment(), HomeAdapter.OnItemClickListener {
         adapter = HomeAdapter(this)
         movieId = arguments?.getInt("MovieId") as Int
         val movieDb = MoviesApplication.movieDatabase
-        dbRepository = DatabaseMovieRepository(movieDb)
-        favouriteViewModel = viewModels<FavouriteViewModel> {
-            FavouriteViewModelProviderFactory(dbRepository = dbRepository)
+        localeRepository = LocaleRepository(movieDb)
+        remoteRepository = RemoteRepository()
+        detailRepository = DetailRepository(localeRepository, remoteRepository = remoteRepository)
+        detailViewModel = viewModels<DetailViewModel> {
+            MovieDetailsViewModelProviderFactory(detailRepository = detailRepository)
         }.value
+
         detailViewModel.apply {
             getMovieDetail(movieId)
             getSimilarMovies(movieId)
@@ -67,7 +72,7 @@ class DetailsFragment : Fragment(), HomeAdapter.OnItemClickListener {
 
         binding.bttAddToFavourite.setOnClickListener {
             if (movieIsInFavourite) {
-                favouriteViewModel.deleteFromFavouriteByMovieID(movieId)
+                detailViewModel.deleteFromFavouriteMovies(movieId)
                 Snackbar.make(
                     requireView(),
                     "Delete from favourite",
@@ -152,12 +157,7 @@ class DetailsFragment : Fragment(), HomeAdapter.OnItemClickListener {
                     release_date = release_date
                 )
                 Log.d("DATABASE", movie.original_title)
-                favouriteViewModel.addToFavourite(movie)
-                Snackbar.make(
-                    requireView(),
-                    "${movie.original_title} add to favourite",
-                    Snackbar.LENGTH_SHORT
-                ).show()
+                detailViewModel.addToFavouriteMovies(movie)
             }
         }
     }
@@ -203,7 +203,7 @@ class DetailsFragment : Fragment(), HomeAdapter.OnItemClickListener {
 
     private fun isFavourite(movieId: Int, callback: (Boolean) -> Unit): Boolean {
         var favouriteMoviesList: List<DatabaseMovieModel>?
-        favouriteViewModel.getFavouriteMovies().observe(viewLifecycleOwner) {
+        detailViewModel.getFavouriteMovies().observe(viewLifecycleOwner) {
             favouriteMoviesList = it
             if (favouriteMoviesList != null) {
                 for (elements in favouriteMoviesList!!) {

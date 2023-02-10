@@ -1,4 +1,4 @@
-package com.example.discovermovie.movieModels.videoModel
+package com.example.discovermovie.data.movieModels.videoModel
 
 data class MovieVideoModel(
     val id: String,

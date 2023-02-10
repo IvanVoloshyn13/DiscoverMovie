@@ -1,4 +1,4 @@
-package com.example.discovermovie.movieModels.simpleMovieModel
+package com.example.discovermovie.data.movieModels.simpleMovieModel
 
 data class MovieItemModel(
     val adult: Boolean,

@@ -1,12 +1,11 @@
 package com.example.discovermovie.screens.home
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.discovermovie.api.APIRepository
-import com.example.discovermovie.movieModels.simpleMovieModel.MovieItemModel
-import com.example.discovermovie.movieModels.simpleMovieModel.MovieModelResponse
+import com.example.discovermovie.data.repository.RemoteRepository
+import com.example.discovermovie.data.movieModels.simpleMovieModel.MovieItemModel
+import com.example.discovermovie.data.movieModels.simpleMovieModel.MovieModelResponse
 import com.example.discovermovie.util.API_KEY
 import com.example.discovermovie.util.Resource
 import com.example.discovermovie.util.SORT_BY_RELEASE_DATE_DESC
@@ -16,7 +15,7 @@ import java.util.Locale
 
 class HomeViewModel(
 ) : ViewModel() {
-    private val APIRepository = APIRepository()
+    private val remoteRepository = RemoteRepository()
 
 
     val discoverMovieLiveData = MutableLiveData<MovieItemModel>()
@@ -37,7 +36,7 @@ class HomeViewModel(
 
     fun getDiscoverMovies() {
         viewModelScope.launch {
-            val response = APIRepository.api.discoverMovie(
+            val response = remoteRepository.movieService().discoverMovie(
                 API_KEY, Locale.getDefault().language,
                 SORT_BY_RELEASE_DATE_DESC, 1
             )
@@ -50,7 +49,7 @@ class HomeViewModel(
     fun getUpcomingMovies() {
         viewModelScope.launch {
             upcomingMoviesLiveData.postValue(Resource.Loading())
-            val response = APIRepository.api.getUpcomingMovies(
+            val response = remoteRepository.movieService().getUpcomingMovies(
                 API_KEY, Locale.getDefault().language, upcomingMoviePage
             )
             upcomingMoviesLiveData
@@ -61,7 +60,7 @@ class HomeViewModel(
 
     fun getNowPlayingMovies() {
         viewModelScope.launch {
-            val response = APIRepository.api.getNowPlayingMovies(
+            val response = remoteRepository.movieService().getNowPlayingMovies(
                 API_KEY,
                 Locale.getDefault().language,
                 nowPlayingMoviePage

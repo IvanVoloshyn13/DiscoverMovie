@@ -1,4 +1,4 @@
-package com.example.discovermovie.movieModels.details
+package com.example.discovermovie.data.movieModels.details
 
 data class BelongsToCollection(
     val backdrop_path: String,

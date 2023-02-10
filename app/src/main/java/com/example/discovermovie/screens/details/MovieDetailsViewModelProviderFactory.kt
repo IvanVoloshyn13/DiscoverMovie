@@ -2,14 +2,15 @@ package com.example.discovermovie.screens.details
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.discovermovie.repository.DatabaseMovieRepository
+import com.example.discovermovie.data.repository.DetailRepository
+import com.example.discovermovie.data.repository.LocaleRepository
 
 class MovieDetailsViewModelProviderFactory(
-    private val dbMovieRepository: DatabaseMovieRepository
+    private val detailRepository: DetailRepository
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
 
-        //dbMovieRepository
-        return DetailViewModel() as T
+
+        return DetailViewModel(detailRepository) as T
     }
 }

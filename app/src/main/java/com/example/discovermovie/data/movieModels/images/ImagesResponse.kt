@@ -1,4 +1,4 @@
-package com.example.discovermovie.movieModels.images
+package com.example.discovermovie.data.movieModels.images
 
 data class ImagesResponse(
     val backdrops: List<Backdrop>,

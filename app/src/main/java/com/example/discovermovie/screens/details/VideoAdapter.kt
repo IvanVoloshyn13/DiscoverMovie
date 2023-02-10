@@ -7,9 +7,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.discovermovie.R
 import com.example.discovermovie.databinding.LayoutTrailersItemBinding
-import com.example.discovermovie.movieModels.images.Backdrop
-import com.example.discovermovie.movieModels.images.ImagesResponse
-import com.example.discovermovie.movieModels.images.Poster
+import com.example.discovermovie.data.movieModels.images.Backdrop
+import com.example.discovermovie.data.movieModels.images.ImagesResponse
+import com.example.discovermovie.data.movieModels.images.Poster
 import com.example.discovermovie.util.BASE_IMAGE_URL
 import com.example.discovermovie.util.IMAGE_POSTER_SIZE_BIG
 

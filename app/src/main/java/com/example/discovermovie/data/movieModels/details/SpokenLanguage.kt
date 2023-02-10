@@ -1,4 +1,4 @@
-package com.example.discovermovie.movieModels.details
+package com.example.discovermovie.data.movieModels.details
 
 data class SpokenLanguage(
     val english_name: String,
