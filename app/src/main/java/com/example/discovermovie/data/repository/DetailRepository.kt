@@ -1,5 +1,6 @@
 package com.example.discovermovie.data.repository
 
+import android.util.Log
 import com.example.discovermovie.data.movieModels.DatabaseMovieModel
 import com.example.discovermovie.data.movieModels.details.MovieDetailsModel
 import com.example.discovermovie.data.movieModels.images.ImagesResponse
@@ -13,6 +14,8 @@ class DetailRepository(
     val remoteRepository: RemoteRepository
 ) {
     private val language = Locale.getDefault().language
+    private val languageEn = "en"
+
 
     suspend fun addMovieToLocaleRepository(movie: DatabaseMovieModel) {
         localeRepository.addMovie(movie)
@@ -35,7 +38,7 @@ class DetailRepository(
     }
 
     suspend fun getImages(movieId: Int): Response<ImagesResponse> {
-        return remoteRepository.movieService().getImages(movieId, API_KEY, language)
+        return remoteRepository.movieService().getImages(movieId, API_KEY, languageEn)
     }
 
 }

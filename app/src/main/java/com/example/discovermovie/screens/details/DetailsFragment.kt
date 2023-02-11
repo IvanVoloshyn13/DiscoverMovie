@@ -34,7 +34,7 @@ class DetailsFragment : Fragment(), HomeAdapter.OnItemClickListener {
     private lateinit var videoAdapter: VideoAdapter
     private lateinit var adapter: HomeAdapter
     private var movieId by Delegates.notNull<Int>()
-    private var movieIsInFavourite = false
+
     private lateinit var detailRepository: DetailRepository
     private lateinit var remoteRepository: RemoteRepository
     private lateinit var localeRepository: LocaleRepository
@@ -70,41 +70,27 @@ class DetailsFragment : Fragment(), HomeAdapter.OnItemClickListener {
         super.onViewCreated(view, savedInstanceState)
         setUiData()
 
+        detailViewModel.getFavouriteMovies().observe(viewLifecycleOwner) { list ->
+            detailViewModel.isFavourite(movieId, list) {
+                when (it) {
+                    true -> binding.bttAddToFavourite.setImageResource(R.drawable.ic_is_favorite)
+                    else -> {}
+                }
+            }
+        }
+
         binding.bttAddToFavourite.setOnClickListener {
-            if (movieIsInFavourite) {
+            if (detailViewModel.movieIsInFavourite) {
                 detailViewModel.deleteFromFavouriteMovies(movieId)
-                Snackbar.make(
-                    requireView(),
-                    "Delete from favourite",
-                    Snackbar.LENGTH_SHORT
-                ).show()
-                isFavourite(movieId) {
-                    when (it) {
-                        true -> {
-                            binding.bttAddToFavourite.setImageResource(R.drawable.ic_add_favorite)
-                            movieIsInFavourite = false
-                        }
-                        else -> {}
-                    }
-                }
-
-            } else {
+                binding.bttAddToFavourite.setImageResource(R.drawable.ic_add_favorite)
+                detailViewModel.movieIsInFavourite = false
+            } else if (!detailViewModel.movieIsInFavourite) {
                 addToFavourite()
-                isFavourite(movieId) {
-                    when (it) {
-                        true -> binding.bttAddToFavourite.setImageResource(R.drawable.ic_is_favorite)
-                        else -> {}
-                    }
-                }
+                binding.bttAddToFavourite.setImageResource(R.drawable.ic_is_favorite)
+                detailViewModel.movieIsInFavourite = true
             }
         }
 
-        isFavourite(movieId) {
-            when (it) {
-                true -> binding.bttAddToFavourite.setImageResource(R.drawable.ic_is_favorite)
-                else -> {}
-            }
-        }
 
     }
 
@@ -188,6 +174,7 @@ class DetailsFragment : Fragment(), HomeAdapter.OnItemClickListener {
         videoAdapter = VideoAdapter()
         binding.rvTrailersImages.adapter = videoAdapter
         detailViewModel.imagesLiveData.observe(viewLifecycleOwner) {
+            Log.d("IMAGES", it.size.toString())
             videoAdapter.submitList(it)
         }
     }
@@ -201,21 +188,6 @@ class DetailsFragment : Fragment(), HomeAdapter.OnItemClickListener {
         return genre!!.removeSuffix(",").removePrefix(null.toString())
     }
 
-    private fun isFavourite(movieId: Int, callback: (Boolean) -> Unit): Boolean {
-        var favouriteMoviesList: List<DatabaseMovieModel>?
-        detailViewModel.getFavouriteMovies().observe(viewLifecycleOwner) {
-            favouriteMoviesList = it
-            if (favouriteMoviesList != null) {
-                for (elements in favouriteMoviesList!!) {
-                    if (elements.movieId == movieId) {
-                        movieIsInFavourite = true
-                    }
-                }
-            }
-            callback(movieIsInFavourite)
-        }
-        return movieIsInFavourite
-    }
 
 //    fun backgroundFromImage(posterPath: String) {
 //        Glide.with(this@DetailsFragment)

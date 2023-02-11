@@ -25,12 +25,12 @@ class DetailViewModel(private val detailRepository: DetailRepository) : ViewMode
     val movieDetailLiveData = MutableLiveData<Resource<MovieDetailsModel>>()
     val similarMoviesLiveData = MutableLiveData<Resource<List<MovieItemModel>>>()
     val imagesLiveData = MutableLiveData<List<Backdrop>>()
+    var movieIsInFavourite = false
 
     fun getMovieDetail(movieId: Int) {
         viewModelScope.launch {
             movieDetailLiveData.postValue(Resource.Loading())
-            val response =
-                detailRepository.getMovieDetails(movieId)
+            val response = detailRepository.getMovieDetails(movieId)
             movieDetailLiveData.postValue(handleMovieDetail(response))
         }
     }
@@ -38,8 +38,7 @@ class DetailViewModel(private val detailRepository: DetailRepository) : ViewMode
     fun getSimilarMovies(movieId: Int) {
         viewModelScope.launch {
             similarMoviesLiveData.postValue(Resource.Loading())
-            val response =
-                detailRepository.getSimilarMovies(movieId)
+            val response = detailRepository.getSimilarMovies(movieId)
             similarMoviesLiveData.postValue(handleSimilarMovies(response))
         }
     }
@@ -47,8 +46,7 @@ class DetailViewModel(private val detailRepository: DetailRepository) : ViewMode
 
     fun getImages(movieId: Int) {
         viewModelScope.launch {
-            val response =
-               detailRepository.getImages(movieId)
+            val response = detailRepository.getImages(movieId)
             imagesLiveData.postValue(response.body()!!.backdrops)
         }
     }
@@ -87,4 +85,21 @@ class DetailViewModel(private val detailRepository: DetailRepository) : ViewMode
     }
 
     fun getFavouriteMovies() = detailRepository.getFavouriteMovies()
+
+
+    fun isFavourite(
+        movieId: Int, favouriteMoviesList: List<DatabaseMovieModel>, callback: (Boolean) -> Unit
+    ): Boolean {
+        if (favouriteMoviesList != null) {
+            for (elements in favouriteMoviesList!!) {
+                if (elements.movieId == movieId) {
+                    movieIsInFavourite = true
+                }
+            }
+            callback(movieIsInFavourite)
+        }
+        return movieIsInFavourite
+    }
+
+
 }
