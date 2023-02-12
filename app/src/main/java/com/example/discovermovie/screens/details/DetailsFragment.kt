@@ -1,6 +1,7 @@
 package com.example.discovermovie.screens.details
 
 
+import android.app.Dialog
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -91,6 +92,11 @@ class DetailsFragment : Fragment(), HomeAdapter.OnItemClickListener {
             }
         }
 
+        binding.bttSetRating.setOnClickListener {
+            val dialog: Dialog = RateMovie(this@DetailsFragment.requireContext())
+            dialog.show()
+        }
+
 
     }
 
@@ -132,8 +138,8 @@ class DetailsFragment : Fragment(), HomeAdapter.OnItemClickListener {
     }
 
     private fun addToFavourite() {
-        detailViewModel.movieDetailLiveData.observe(viewLifecycleOwner) { detailResponce ->
-            detailResponce.data?.apply {
+        detailViewModel.movieDetailLiveData.observe(viewLifecycleOwner) { detailResponse ->
+            detailResponse.data?.apply {
                 val movie = DatabaseMovieModel(
                     id = null,
                     movieId = movieId,
@@ -220,7 +226,15 @@ class DetailsFragment : Fragment(), HomeAdapter.OnItemClickListener {
     }
 
     override fun onItemClick(movieId: Int) {
-        TODO("Not yet implemented")
+        val bundle = Bundle()
+        bundle.putInt("MovieId", movieId)
+        val detailsFragment = DetailsFragment()
+        detailsFragment.arguments = bundle
+        parentFragmentManager.beginTransaction().attach(detailsFragment)
+            .addToBackStack(null)
+            .setReorderingAllowed(true)
+            .commit()
+
     }
 
 
