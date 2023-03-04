@@ -6,28 +6,25 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.discovermovie.MoviesApplication
 import com.example.discovermovie.databinding.FragmentFavouriteBinding
 import com.example.discovermovie.data.repository.LocaleRepository
+import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.lifecycle.HiltViewModel
 
-
+@AndroidEntryPoint
 class FavouriteFragment : Fragment() {
 
     private lateinit var binding: FragmentFavouriteBinding
     private lateinit var adapter: FavouriteAdapter
-    private lateinit var dbRepository: LocaleRepository
-    private lateinit var favouriteViewModel: FavouriteViewModel
+    private  val favouriteViewModel: FavouriteViewModel by viewModels()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentFavouriteBinding.inflate(inflater)
-        val movieDb = MoviesApplication.movieDatabase
-        dbRepository = LocaleRepository(movieDb)
-        favouriteViewModel = viewModels<FavouriteViewModel> {
-            FavouriteViewModelProviderFactory(dbRepository = dbRepository)
-        }.value
         adapter = FavouriteAdapter()
         binding.rvFavouriteMovies.adapter = adapter
         return binding.root

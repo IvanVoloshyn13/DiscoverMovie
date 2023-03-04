@@ -3,7 +3,7 @@ package com.example.discovermovie.screens.home
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.discovermovie.data.repository.RemoteRepository
+import com.example.discovermovie.data.repository.MovieRemoteRepository
 import com.example.discovermovie.data.movieModels.simpleMovieModel.MovieItemModel
 import com.example.discovermovie.data.movieModels.simpleMovieModel.MovieModelResponse
 import com.example.discovermovie.util.API_KEY
@@ -15,7 +15,7 @@ import java.util.Locale
 
 class HomeViewModel(
 ) : ViewModel() {
-    private val remoteRepository = RemoteRepository()
+    private val movieRemoteRepository = MovieRemoteRepository()
 
 
     val discoverMovieLiveData = MutableLiveData<MovieItemModel>()
@@ -36,7 +36,7 @@ class HomeViewModel(
 
     fun getDiscoverMovies() {
         viewModelScope.launch {
-            val response = remoteRepository.movieService().discoverMovie(
+            val response = movieRemoteRepository.movieService().discoverMovie(
                 API_KEY, Locale.getDefault().language,
                 SORT_BY_RELEASE_DATE_DESC, 1
             )
@@ -49,7 +49,7 @@ class HomeViewModel(
     fun getUpcomingMovies() {
         viewModelScope.launch {
             upcomingMoviesLiveData.postValue(Resource.Loading())
-            val response = remoteRepository.movieService().getUpcomingMovies(
+            val response = movieRemoteRepository.movieService().getUpcomingMovies(
                 API_KEY, Locale.getDefault().language, upcomingMoviePage
             )
             upcomingMoviesLiveData
@@ -60,7 +60,7 @@ class HomeViewModel(
 
     fun getNowPlayingMovies() {
         viewModelScope.launch {
-            val response = remoteRepository.movieService().getNowPlayingMovies(
+            val response = movieRemoteRepository.movieService().getNowPlayingMovies(
                 API_KEY,
                 Locale.getDefault().language,
                 nowPlayingMoviePage

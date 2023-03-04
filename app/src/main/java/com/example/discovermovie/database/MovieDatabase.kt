@@ -11,21 +11,4 @@ import com.example.discovermovie.data.movieModels.DatabaseMovieModel
 abstract class MovieDatabase : RoomDatabase() {
     abstract fun getMovieDao(): MoviesDao
 
-    companion object {
-        @Volatile
-        private var movieDb: MovieDatabase? = null
-        private val LOCK = Any()
-        fun getInstance(context: Context): MovieDatabase? {
-            if (movieDb == null) {
-                synchronized(LOCK) {
-                    movieDb = Room.databaseBuilder(
-                        context.applicationContext,
-                        MovieDatabase::class.java,
-                        "movie_db.db"
-                    ).build()
-                }
-            }
-            return movieDb
-        }
-    }
 }

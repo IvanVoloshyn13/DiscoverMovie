@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
@@ -20,13 +21,15 @@ import com.example.discovermovie.util.BASE_IMAGE_URL
 import com.example.discovermovie.util.IMAGE_POSTER_SIZE_BIG
 import com.example.discovermovie.util.IMAGE_POSTER_SIZE_ORIGINAL
 import com.example.discovermovie.util.Resource
+import dagger.hilt.android.AndroidEntryPoint
 import kotlin.random.Random
 
+@AndroidEntryPoint
 class HomeFragment : Fragment(), HomeAdapter.OnItemClickListener {
     private lateinit var binding: FragmentHomeBinding
     private lateinit var adapterUpcomingMovies: HomeAdapter
     private lateinit var adapterNowPlayingMovies: HomeAdapter
-    private lateinit var homeViewModel: HomeViewModel
+    private  val homeViewModel: HomeViewModel by viewModels()
 
 
     override fun onCreateView(
@@ -34,7 +37,6 @@ class HomeFragment : Fragment(), HomeAdapter.OnItemClickListener {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentHomeBinding.inflate(inflater)
-        homeViewModel = ViewModelProvider(this)[HomeViewModel::class.java]
         return binding.root
     }
 
@@ -121,7 +123,7 @@ class HomeFragment : Fragment(), HomeAdapter.OnItemClickListener {
 
     override fun onDestroy() {
         super.onDestroy()
-        Log.d("onDestroy","Destroy")
+        Log.d("onDestroy", "Destroy")
     }
 
 

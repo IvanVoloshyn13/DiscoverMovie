@@ -4,6 +4,7 @@ package com.example.discovermovie.database
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.example.discovermovie.data.movieModels.DatabaseMovieModel
+import com.example.discovermovie.data.movieModels.details.MovieDetailsModel
 
 @Dao
 interface MoviesDao {
@@ -18,4 +19,7 @@ interface MoviesDao {
 
     @Query("SELECT * FROM movies ")
     fun getAllMovies(): LiveData<List<DatabaseMovieModel>>
+
+    @Query("SELECT * FROM movies WHERE movieId=:movieId")
+    suspend fun getSingleMovie(movieId: Int): DatabaseMovieModel
 }
