@@ -8,7 +8,7 @@ import com.example.discovermovie.data.movieModels.details.MovieDetailsModel
 import com.example.discovermovie.data.movieModels.images.Backdrop
 import com.example.discovermovie.data.movieModels.simpleMovieModel.MovieItemModel
 import com.example.discovermovie.data.movieModels.simpleMovieModel.MovieModelResponse
-import com.example.discovermovie.data.repository.DetailRepository
+import com.example.discovermovie.repository.DetailRepository
 import com.example.discovermovie.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch

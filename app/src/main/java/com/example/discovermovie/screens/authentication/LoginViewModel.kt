@@ -3,10 +3,10 @@ package com.example.discovermovie.screens.authentication
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.discovermovie.authentication.AuthenticationRequest
-import com.example.discovermovie.authentication.RequestToken
-import com.example.discovermovie.authentication.UserResponse
-import com.example.discovermovie.data.repository.LoginRepository
+import com.example.discovermovie.data.movieModels.authentication.AuthenticationRequest
+import com.example.discovermovie.data.movieModels.authentication.RequestToken
+import com.example.discovermovie.data.movieModels.authentication.UserResponse
+import com.example.discovermovie.repository.LoginRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

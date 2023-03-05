@@ -1,7 +1,8 @@
-package com.example.discovermovie.data.repository
+package com.example.discovermovie.repository
 
 import com.example.discovermovie.api.AuthenticationServices
 import com.example.discovermovie.authentication.*
+import com.example.discovermovie.data.movieModels.authentication.*
 import com.example.discovermovie.util.API_KEY
 import retrofit2.Response
 import javax.inject.Inject

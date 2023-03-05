@@ -1,4 +1,4 @@
-package com.example.discovermovie.data.repository
+package com.example.discovermovie.repository
 
 import android.media.Rating
 import com.example.discovermovie.api.MovieServices

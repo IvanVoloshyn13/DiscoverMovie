@@ -1,4 +1,4 @@
-package com.example.discovermovie.authentication
+package com.example.discovermovie.data.movieModels.authentication
 
 data class SessionIdResponse(
     val success: Boolean,

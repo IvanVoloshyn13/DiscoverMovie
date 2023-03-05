@@ -1,4 +1,4 @@
-package com.example.discovermovie.data.repository
+package com.example.discovermovie.repository
 
 import androidx.lifecycle.LiveData
 import com.example.discovermovie.database.MovieDatabase
