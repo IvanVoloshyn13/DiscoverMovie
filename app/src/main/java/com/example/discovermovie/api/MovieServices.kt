@@ -1,19 +1,12 @@
 package com.example.discovermovie.api
 
-import androidx.core.view.accessibility.AccessibilityEventCompat.ContentChangeType
 import com.example.discovermovie.data.movieModels.details.MovieDetailsModel
 import com.example.discovermovie.data.movieModels.images.ImagesResponse
 import com.example.discovermovie.data.movieModels.simpleMovieModel.MovieModelResponse
 import com.example.discovermovie.data.movieModels.videoModel.VideoResponse
 import okhttp3.ResponseBody
-import retrofit2.Call
 import retrofit2.Response
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.Headers
-import retrofit2.http.POST
-import retrofit2.http.Path
-import retrofit2.http.Query
+import retrofit2.http.*
 
 interface MovieServices {
 

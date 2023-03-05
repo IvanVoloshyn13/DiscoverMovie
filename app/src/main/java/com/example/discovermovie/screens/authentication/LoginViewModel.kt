@@ -1,30 +1,38 @@
 package com.example.discovermovie.screens.authentication
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.discovermovie.authentication.*
+import com.example.discovermovie.authentication.AuthenticationRequest
+import com.example.discovermovie.authentication.RequestToken
+import com.example.discovermovie.authentication.UserResponse
 import com.example.discovermovie.data.repository.LoginRepository
-import com.example.discovermovie.util.API_KEY
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class LoginViewModel(val loginRepository: LoginRepository) : ViewModel() {
-    val tokenLiveData = MutableLiveData<TokenResponse>()
-    val loginLiveData = MutableLiveData<TokenResponse>()
-    val sessionIdLiveData = MutableLiveData<SessionIdResponse>()
-    val accountDetailsLiveData = MutableLiveData<UserResponse>()
+@HiltViewModel
+class LoginViewModel @Inject constructor(private val loginRepository: LoginRepository) :
+    ViewModel() {
 
-    fun createToken() {
+    val userLiveData = MutableLiveData<UserResponse>()
+    var requestToken: String? = null
+    private lateinit var sessionItRequestToken: RequestToken
+
+    private fun createToken(callback: (String) -> Unit) {
         viewModelScope.launch {
             val response =
                 loginRepository.createRequestToken()
-            tokenLiveData.postValue(response.body())
+            if (response.isSuccessful) {
+                requestToken = response.body()?.request_token
+                callback(requestToken!!)
+            } else {
+                callback(response.message())
+            }
         }
     }
 
-    fun login(userName: String, password: String, token: String) {
-        Log.d("Login", "$userName,$password,$token")
+    private fun login(userName: String, password: String, token: String, callback: (RequestToken) -> Unit) {
         viewModelScope.launch {
             val response =
                 loginRepository.createSessionWithLogin(
@@ -32,23 +40,40 @@ class LoginViewModel(val loginRepository: LoginRepository) : ViewModel() {
                         userName, password, token
                     )
                 )
-            Log.d("LOGIN", response.isSuccessful.toString())
-            loginLiveData.postValue(response.body())
+            if (response.isSuccessful) {
+                sessionItRequestToken = RequestToken(requestToken!!)
+                callback(sessionItRequestToken)
+            } else {
+            }
+
         }
 
     }
 
-    fun createSessionId(requestToken: RequestToken) {
+    private fun createSessionId(requestToken: RequestToken, callback: (String) -> Unit) {
         viewModelScope.launch {
             val response = loginRepository.createSessionId(requestToken)
-            sessionIdLiveData.postValue(response.body())
+            if (response.isSuccessful) {
+                callback(response.body()!!.session_id)
+            }
         }
     }
 
-    fun getAccDetails(sessionId: String) {
+    private fun getAccDetails(sessionId: String) {
         viewModelScope.launch {
             val response = loginRepository.getAccDetails(sessionId)
-            accountDetailsLiveData.postValue(response.body())
+            userLiveData.postValue(response.body())
+        }
+    }
+
+    fun userAuth(login: String, password: String) {
+        createToken {
+            login(login, password, it) { requestToken ->
+                createSessionId(requestToken) { sessionId ->
+                    getAccDetails(sessionId)
+                }
+            }
+
         }
     }
 

@@ -8,17 +8,21 @@ import android.view.ViewGroup
 import android.widget.RatingBar
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
 import com.example.discovermovie.databinding.CustomRateDialogBinding
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import kotlin.math.max
 import kotlin.math.min
 
+@AndroidEntryPoint
+class RateMovie(val movieId: Int) : DialogFragment() {
 
-class RateMovie(private val detailViewModel: DetailViewModel, val movieId: Int) : DialogFragment() {
     private lateinit var binding: CustomRateDialogBinding
     private var movieRating = 0.0
+    private val detailViewModel: DetailViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,

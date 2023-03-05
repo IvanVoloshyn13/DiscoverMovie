@@ -3,19 +3,21 @@ package com.example.discovermovie.screens.home
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.discovermovie.data.repository.MovieRemoteRepository
+import com.example.discovermovie.api.MovieServices
 import com.example.discovermovie.data.movieModels.simpleMovieModel.MovieItemModel
 import com.example.discovermovie.data.movieModels.simpleMovieModel.MovieModelResponse
 import com.example.discovermovie.util.API_KEY
 import com.example.discovermovie.util.Resource
 import com.example.discovermovie.util.SORT_BY_RELEASE_DATE_DESC
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import retrofit2.Response
-import java.util.Locale
-
-class HomeViewModel(
+import java.util.*
+import javax.inject.Inject
+@HiltViewModel
+class HomeViewModel @Inject constructor(
+    private val movieService: MovieServices
 ) : ViewModel() {
-    private val movieRemoteRepository = MovieRemoteRepository()
 
 
     val discoverMovieLiveData = MutableLiveData<MovieItemModel>()
@@ -36,7 +38,7 @@ class HomeViewModel(
 
     fun getDiscoverMovies() {
         viewModelScope.launch {
-            val response = movieRemoteRepository.movieService().discoverMovie(
+            val response = movieService.discoverMovie(
                 API_KEY, Locale.getDefault().language,
                 SORT_BY_RELEASE_DATE_DESC, 1
             )
@@ -49,7 +51,7 @@ class HomeViewModel(
     fun getUpcomingMovies() {
         viewModelScope.launch {
             upcomingMoviesLiveData.postValue(Resource.Loading())
-            val response = movieRemoteRepository.movieService().getUpcomingMovies(
+            val response = movieService.getUpcomingMovies(
                 API_KEY, Locale.getDefault().language, upcomingMoviePage
             )
             upcomingMoviesLiveData
@@ -60,7 +62,7 @@ class HomeViewModel(
 
     fun getNowPlayingMovies() {
         viewModelScope.launch {
-            val response = movieRemoteRepository.movieService().getNowPlayingMovies(
+            val response = movieService.getNowPlayingMovies(
                 API_KEY,
                 Locale.getDefault().language,
                 nowPlayingMoviePage

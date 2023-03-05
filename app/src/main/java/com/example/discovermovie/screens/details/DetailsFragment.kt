@@ -1,30 +1,19 @@
 package com.example.discovermovie.screens.details
 
 
-import android.app.Dialog
-import android.graphics.Bitmap
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.palette.graphics.Palette
 import com.bumptech.glide.Glide
-import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.transition.Transition
-import com.example.discovermovie.MoviesApplication
 import com.example.discovermovie.R
-import com.example.discovermovie.databinding.FragmentDetailsBinding
 import com.example.discovermovie.data.movieModels.DatabaseMovieModel
 import com.example.discovermovie.data.movieModels.details.Genre
-import com.example.discovermovie.data.repository.DetailRepository
-import com.example.discovermovie.data.repository.LocaleRepository
-import com.example.discovermovie.data.repository.MovieRemoteRepository
+import com.example.discovermovie.databinding.FragmentDetailsBinding
 import com.example.discovermovie.screens.home.HomeAdapter
 import com.example.discovermovie.util.BASE_IMAGE_URL
 import com.example.discovermovie.util.IMAGE_POSTER_SIZE_BIG
@@ -88,7 +77,7 @@ class DetailsFragment : Fragment(), HomeAdapter.OnItemClickListener {
         }
 
         binding.bttSetRating.setOnClickListener {
-            val dialog: DialogFragment = RateMovie(detailViewModel, movieId)
+            val dialog: DialogFragment = RateMovie(movieId)
             val args = Bundle()
             args.putString("IMAGE", imgUri)
             dialog.arguments = args

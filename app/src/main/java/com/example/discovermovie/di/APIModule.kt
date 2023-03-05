@@ -18,7 +18,7 @@ class APIModule {
 
     @Provides
     @Singleton
-    fun provideRetrofit(baseUrl: String) = Retrofit.Builder().baseUrl(baseUrl)
+    fun provideRetrofit(baseUrl: String): Retrofit = Retrofit.Builder().baseUrl(baseUrl)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
@@ -26,4 +26,5 @@ class APIModule {
     @Singleton
     fun provideMovieServices(retrofit: Retrofit): MovieServices =
         retrofit.create(MovieServices::class.java)
+
 }

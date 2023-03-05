@@ -1,17 +1,13 @@
 package com.example.discovermovie.screens.favourite
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.discovermovie.MoviesApplication
 import com.example.discovermovie.databinding.FragmentFavouriteBinding
-import com.example.discovermovie.data.repository.LocaleRepository
 import dagger.hilt.android.AndroidEntryPoint
-import dagger.hilt.android.lifecycle.HiltViewModel
 
 @AndroidEntryPoint
 class FavouriteFragment : Fragment() {

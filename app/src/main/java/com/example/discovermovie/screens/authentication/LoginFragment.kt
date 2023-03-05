@@ -1,23 +1,22 @@
 package com.example.discovermovie.screens.authentication
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.example.discovermovie.authentication.RequestToken
-import com.example.discovermovie.data.repository.LoginRepository
-import com.example.discovermovie.data.repository.MovieRemoteRepository
+import androidx.navigation.findNavController
+import com.example.discovermovie.R
 import com.example.discovermovie.databinding.FragmentLoginScreenBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class LoginFragment : Fragment() {
 
     private lateinit var binding: FragmentLoginScreenBinding
-    private lateinit var loginRepository: LoginRepository
-    private lateinit var movieRemoteRepository: MovieRemoteRepository
-    private lateinit var loginViewModel: LoginViewModel
+    private val loginViewModel: LoginViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -25,11 +24,7 @@ class LoginFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentLoginScreenBinding.inflate(inflater)
-        movieRemoteRepository = MovieRemoteRepository()
-        loginRepository = LoginRepository(movieRemoteRepository)
-        loginViewModel = viewModels<LoginViewModel> {
-            LoginViewModelProviderFactory(loginRepository)
-        }.value
+
         return binding.root
     }
 
@@ -38,29 +33,17 @@ class LoginFragment : Fragment() {
 
 
         binding.bttLogin.setOnClickListener {
-
-            //Rewrite it to one fun in viewModel
-            loginViewModel.createToken()
-            loginViewModel.tokenLiveData.observe(viewLifecycleOwner) {
-                if (it.success) {
-                    val username = binding.tvEmail.text.toString()
-                    val password = binding.tvPassword.text.toString()
-                    loginViewModel.login(username, password, it.request_token)
-                    loginViewModel.loginLiveData.observe(viewLifecycleOwner) { login ->
-                        if (login.success) {
-                            val requestToken = RequestToken(login.request_token)
-                            loginViewModel.createSessionId(requestToken)
-                            loginViewModel.sessionIdLiveData.observe(viewLifecycleOwner) { session ->
-                                if (session.success) {
-                                    val sessionId = session.session_id
-                                    loginViewModel.getAccDetails(sessionId)
-                                    loginViewModel.accountDetailsLiveData.observe(viewLifecycleOwner) { user ->
-                                        Log.d("LOGIN", user.username)
-                                    }
-                                }
-                            }
-                        }
-                    }
+            val login = binding.tvEmail.text.toString()
+            val password = binding.tvPassword.text.toString()
+            loginViewModel.userAuth(login, password)
+            loginViewModel.userLiveData.observe(viewLifecycleOwner) { user ->
+                if (user != null) {
+                    view.findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
+                    Toast.makeText(
+                        this@LoginFragment.requireContext(),
+                        user.username,
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
         }

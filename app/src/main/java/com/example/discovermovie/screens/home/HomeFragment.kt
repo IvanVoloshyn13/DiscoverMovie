@@ -1,7 +1,6 @@
 package com.example.discovermovie.screens.home
 
 import android.os.Bundle
-import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -9,20 +8,14 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.NavController
-import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import com.bumptech.glide.Glide
 import com.example.discovermovie.R
 import com.example.discovermovie.databinding.FragmentHomeBinding
-import com.example.discovermovie.data.movieModels.simpleMovieModel.MovieItemModel
 import com.example.discovermovie.util.BASE_IMAGE_URL
-import com.example.discovermovie.util.IMAGE_POSTER_SIZE_BIG
 import com.example.discovermovie.util.IMAGE_POSTER_SIZE_ORIGINAL
 import com.example.discovermovie.util.Resource
 import dagger.hilt.android.AndroidEntryPoint
-import kotlin.random.Random
 
 @AndroidEntryPoint
 class HomeFragment : Fragment(), HomeAdapter.OnItemClickListener {
