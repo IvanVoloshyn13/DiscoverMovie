@@ -3,7 +3,7 @@ package com.example.discovermovie.screens.details
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.discovermovie.data.movieModels.DatabaseMovieModel
+import com.example.discovermovie.data.localeDataBase.MovieEntity
 import com.example.discovermovie.data.movieModels.details.MovieDetailsModel
 import com.example.discovermovie.data.movieModels.images.Backdrop
 import com.example.discovermovie.data.movieModels.simpleMovieModel.MovieItemModel
@@ -12,7 +12,6 @@ import com.example.discovermovie.repository.DetailRepository
 import com.example.discovermovie.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import okhttp3.ResponseBody
 import retrofit2.Response
 import javax.inject.Inject
 
@@ -73,7 +72,7 @@ class DetailViewModel
         return Resource.Error(response.message())
     }
 
-    fun addToFavouriteMovies(movie: DatabaseMovieModel) {
+    fun addToFavouriteMovies(movie: MovieEntity) {
         viewModelScope.launch {
             detailRepository.addMovieToLocaleRepository(movie)
         }
@@ -103,6 +102,8 @@ class DetailViewModel
 
         }
     }
+
+
 
 
 }

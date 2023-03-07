@@ -1,11 +1,11 @@
-package com.example.discovermovie.data.movieModels
+package com.example.discovermovie.data.localeDataBase
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 
 @Entity(tableName = "movies")
-data class DatabaseMovieModel(
+data class MovieEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int?,
     @SerializedName("id")

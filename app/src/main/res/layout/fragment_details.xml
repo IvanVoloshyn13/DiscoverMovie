@@ -150,6 +150,7 @@
             android:id="@+id/btt_set_rating"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:visibility="invisible"
             android:src="@drawable/ic_baseline_star_rate_24"
             app:layout_constraintEnd_toEndOf="@id/tv_set_rating"
             app:layout_constraintStart_toStartOf="@id/tv_set_rating"

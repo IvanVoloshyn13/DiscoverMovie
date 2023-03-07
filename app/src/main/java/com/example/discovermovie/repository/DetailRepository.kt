@@ -1,8 +1,7 @@
 package com.example.discovermovie.repository
 
-import android.media.Rating
 import com.example.discovermovie.api.MovieServices
-import com.example.discovermovie.data.movieModels.DatabaseMovieModel
+import com.example.discovermovie.data.localeDataBase.MovieEntity
 import com.example.discovermovie.data.movieModels.details.MovieDetailsModel
 import com.example.discovermovie.data.movieModels.images.ImagesResponse
 import com.example.discovermovie.data.movieModels.simpleMovieModel.MovieModelResponse
@@ -12,22 +11,22 @@ import java.util.Locale
 import javax.inject.Inject
 
 class DetailRepository @Inject constructor(
-    private val localeRepository: LocaleRepository,
+    private val favouriteMoviesLocaleRepository: FavouriteMoviesLocaleRepository,
     private val movieService: MovieServices
 ) {
     private val language = Locale.getDefault().language
     private val languageEn = "en"
 
 
-    suspend fun addMovieToLocaleRepository(movie: DatabaseMovieModel) {
-        localeRepository.addMovie(movie)
+    suspend fun addMovieToLocaleRepository(movie: MovieEntity) {
+        favouriteMoviesLocaleRepository.addMovie(movie)
     }
 
     suspend fun deleteMovieFromLocaleRepository(movieId: Int) {
-        localeRepository.deleteMovieById(movieId)
+        favouriteMoviesLocaleRepository.deleteMovieById(movieId)
     }
 
-    fun getFavouriteMovies() = localeRepository.getAllMovies()
+    fun getFavouriteMovies() = favouriteMoviesLocaleRepository.getAllMovies()
 
     suspend fun getMovieDetails(movieId: Int): Response<MovieDetailsModel> {
         return movieService.getMovieDetails(movieId, API_KEY, language)
@@ -42,7 +41,7 @@ class DetailRepository @Inject constructor(
         return movieService.getImages(movieId, API_KEY, languageEn)
     }
 
-    suspend fun getSingleMovieById(movieId: Int) = localeRepository.getSingleMovieById(movieId)
+    suspend fun getSingleMovieById(movieId: Int) = favouriteMoviesLocaleRepository.getSingleMovieById(movieId)
 
     suspend fun setRating(movieId: Int, rating: Double) {
         movieService.setRating(movieId, rating, API_KEY)

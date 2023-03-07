@@ -11,7 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
 import com.example.discovermovie.R
-import com.example.discovermovie.data.movieModels.DatabaseMovieModel
+import com.example.discovermovie.data.localeDataBase.MovieEntity
 import com.example.discovermovie.data.movieModels.details.Genre
 import com.example.discovermovie.databinding.FragmentDetailsBinding
 import com.example.discovermovie.screens.home.HomeAdapter
@@ -128,7 +128,7 @@ class DetailsFragment : Fragment(), HomeAdapter.OnItemClickListener {
     private fun addToFavourite() {
         detailViewModel.movieDetailLiveData.observe(viewLifecycleOwner) { detailResponse ->
             detailResponse.data?.apply {
-                val movie = DatabaseMovieModel(
+                val movie = MovieEntity(
                     id = null,
                     movieId = movieId,
                     original_title = original_title,

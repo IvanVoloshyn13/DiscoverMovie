@@ -1,6 +1,6 @@
 package com.example.discovermovie.api
 
-import com.example.discovermovie.data.movieModels.authentication.*
+import com.example.discovermovie.data.authentication.*
 import com.example.discovermovie.util.API_KEY
 import retrofit2.Response
 import retrofit2.http.Body

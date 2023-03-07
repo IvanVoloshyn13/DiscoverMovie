@@ -1,4 +1,4 @@
-package com.example.discovermovie.data.movieModels.authentication
+package com.example.discovermovie.data.authentication
 
 import com.example.discovermovie.util.API_KEY
 
