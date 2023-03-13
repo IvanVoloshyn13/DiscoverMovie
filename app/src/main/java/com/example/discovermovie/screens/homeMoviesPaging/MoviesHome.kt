@@ -1,7 +1,6 @@
 package com.example.discovermovie.screens.homeMoviesPaging
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,10 +16,11 @@ import com.example.discovermovie.databinding.FragmentNoviesHomeBinding
 import com.example.discovermovie.screens.home.HomeAdapter
 import com.example.discovermovie.screens.home.HomeViewModel
 import com.example.discovermovie.util.Resource
+import dagger.hilt.android.AndroidEntryPoint
 
 const val QUERY_PAGE_SIZE = 20
 
-
+@AndroidEntryPoint
 class MoviesHome : Fragment(), HomeAdapter.OnItemClickListener {
 
     private lateinit var binding: FragmentNoviesHomeBinding

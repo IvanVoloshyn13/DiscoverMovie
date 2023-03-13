@@ -1,40 +1,35 @@
 package com.example.discovermovie.screens.home
 
 import android.os.Bundle
-import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.NavController
-import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import com.bumptech.glide.Glide
 import com.example.discovermovie.R
 import com.example.discovermovie.databinding.FragmentHomeBinding
-import com.example.discovermovie.data.movieModels.simpleMovieModel.MovieItemModel
 import com.example.discovermovie.util.BASE_IMAGE_URL
-import com.example.discovermovie.util.IMAGE_POSTER_SIZE_BIG
 import com.example.discovermovie.util.IMAGE_POSTER_SIZE_ORIGINAL
 import com.example.discovermovie.util.Resource
-import kotlin.random.Random
+import dagger.hilt.android.AndroidEntryPoint
 
-class HomeFragment : Fragment(), HomeAdapter.OnItemClickListener {
+@AndroidEntryPoint
+class HomeFragment  : Fragment(),
+    HomeAdapter.OnItemClickListener {
     private lateinit var binding: FragmentHomeBinding
     private lateinit var adapterUpcomingMovies: HomeAdapter
     private lateinit var adapterNowPlayingMovies: HomeAdapter
-    private lateinit var homeViewModel: HomeViewModel
-
-
+    private val homeViewModel: HomeViewModel by viewModels()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentHomeBinding.inflate(inflater)
-        homeViewModel = ViewModelProvider(this)[HomeViewModel::class.java]
         return binding.root
     }
 
@@ -121,16 +116,9 @@ class HomeFragment : Fragment(), HomeAdapter.OnItemClickListener {
 
     override fun onDestroy() {
         super.onDestroy()
-        Log.d("onDestroy","Destroy")
+        Log.d("onDestroy", "Destroy")
     }
 
-
-    companion object {
-
-        @JvmStatic
-        fun newInstance() =
-            HomeFragment()
-    }
 
     override fun onItemClick(movieId: Int) {
         val bundle = Bundle()
@@ -139,6 +127,5 @@ class HomeFragment : Fragment(), HomeAdapter.OnItemClickListener {
             .navigate(R.id.action_homeFragment_to_detailsFragment, bundle)
 
     }
-
 
 }

@@ -13,4 +13,6 @@
     <string name="add_to_favourite">Add To Favourite</string>
     <string name="set_rating">Set Rating</string>
     <string name="rate">RATE</string>
+    <string name="remember_me">Remember Me </string>
+    <string name="log_in">Log In</string>
 </resources>
