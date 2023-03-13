@@ -1,18 +1,33 @@
 package com.example.discovermovie.screens.favourite
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.discovermovie.movieModels.DatabaseMovieModel
-import com.example.discovermovie.repository.DatabaseMovieRepository
+import androidx.lifecycle.viewModelScope
+import com.example.discovermovie.data.localeDataBase.MovieEntity
+import com.example.discovermovie.repository.FavouriteMoviesLocaleRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class FavouriteViewModel(
-    private val dbRepository: DatabaseMovieRepository
+@HiltViewModel
+class FavouriteViewModel @Inject constructor(
+    private val dbRepository: FavouriteMoviesLocaleRepository
 ) : ViewModel() {
 
 
     fun getFavouriteMovies() =
         dbRepository.getAllMovies()
+
+    fun addToFavourite(movie: MovieEntity) {
+        viewModelScope.launch {
+            dbRepository.addMovie(movie)
+        }
+    }
+
+    fun deleteFromFavouriteByMovieID(movieId: Int) {
+        viewModelScope.launch {
+            dbRepository.deleteMovieById(movieId)
+        }
+    }
 
 
 }

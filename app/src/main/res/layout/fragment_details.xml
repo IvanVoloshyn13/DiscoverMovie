@@ -14,8 +14,10 @@
 
         <ImageView
             android:id="@+id/iv_poster_big"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="320dp"
+            android:adjustViewBounds="true"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -31,6 +33,17 @@
             app:layout_constraintTop_toBottomOf="@id/iv_poster_big">
 
         </ImageView>
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/small_poster_section_barrier"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:barrierDirection="bottom"
+            app:constraint_referenced_ids="movie_rating,
+            iv_poster_big,iv_poster_small,
+            tv_movie_date_release,
+            tv_movie_genre,
+            tv_movie_runtime,tv_movie_title,movie_rating" />
 
         <TextView
             android:id="@+id/tv_movie_title"
@@ -137,6 +150,7 @@
             android:id="@+id/btt_set_rating"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:visibility="invisible"
             android:src="@drawable/ic_baseline_star_rate_24"
             app:layout_constraintEnd_toEndOf="@id/tv_set_rating"
             app:layout_constraintStart_toStartOf="@id/tv_set_rating"
@@ -167,7 +181,7 @@
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintEnd_toEndOf="@id/tv_movie_genre"
             app:layout_constraintStart_toStartOf="@id/iv_poster_small"
-            app:layout_constraintTop_toBottomOf="@id/tv_movie_genre"
+            app:layout_constraintTop_toBottomOf="@id/small_poster_section_barrier"
             tools:listitem="@layout/layout_trailers_item" />
 
         <TextView
@@ -231,6 +245,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

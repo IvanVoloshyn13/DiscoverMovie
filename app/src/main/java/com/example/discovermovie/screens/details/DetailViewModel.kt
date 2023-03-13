@@ -3,33 +3,34 @@ package com.example.discovermovie.screens.details
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.discovermovie.api.APIRepository
-import com.example.discovermovie.movieModels.details.MovieDetailsModel
-import com.example.discovermovie.movieModels.images.Backdrop
-import com.example.discovermovie.movieModels.simpleMovieModel.MovieItemModel
-import com.example.discovermovie.movieModels.simpleMovieModel.MovieModelResponse
-import com.example.discovermovie.movieModels.videoModel.MovieVideoModel
-import com.example.discovermovie.repository.DatabaseMovieRepository
-import com.example.discovermovie.util.API_KEY
+import com.example.discovermovie.data.localeDataBase.MovieEntity
+import com.example.discovermovie.data.movieModels.details.MovieDetailsModel
+import com.example.discovermovie.data.movieModels.images.Backdrop
+import com.example.discovermovie.data.movieModels.simpleMovieModel.MovieItemModel
+import com.example.discovermovie.data.movieModels.simpleMovieModel.MovieModelResponse
+import com.example.discovermovie.repository.DetailRepository
 import com.example.discovermovie.util.Resource
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import retrofit2.Response
-import java.util.*
+import javax.inject.Inject
 
-//val dbMovieRepository: DatabaseMovieRepository
-class DetailViewModel() : ViewModel() {
+@HiltViewModel
+class DetailViewModel
+@Inject constructor(
+    private val detailRepository: DetailRepository
+) : ViewModel() {
 
-    private val APIRepository = APIRepository()
     val movieDetailLiveData = MutableLiveData<Resource<MovieDetailsModel>>()
     val similarMoviesLiveData = MutableLiveData<Resource<List<MovieItemModel>>>()
-    val movieVideosLiveData = MutableLiveData<List<MovieVideoModel>>()
     val imagesLiveData = MutableLiveData<List<Backdrop>>()
+    val ratingLiveData = MutableLiveData<String>()
+    var movieIsInFavourite = false
 
     fun getMovieDetail(movieId: Int) {
         viewModelScope.launch {
             movieDetailLiveData.postValue(Resource.Loading())
-            val response =
-                APIRepository.api.getMovieDetails(movieId, API_KEY, Locale.getDefault().language)
+            val response = detailRepository.getMovieDetails(movieId)
             movieDetailLiveData.postValue(handleMovieDetail(response))
         }
     }
@@ -37,29 +38,15 @@ class DetailViewModel() : ViewModel() {
     fun getSimilarMovies(movieId: Int) {
         viewModelScope.launch {
             similarMoviesLiveData.postValue(Resource.Loading())
-            val response =
-                APIRepository.api.getSimilarMovies(
-                    movieId,
-                    API_KEY,
-                    Locale.getDefault().language,
-                    1
-                )
+            val response = detailRepository.getSimilarMovies(movieId)
             similarMoviesLiveData.postValue(handleSimilarMovies(response))
         }
     }
 
-    fun getMovieVideos(movieId: Int) {
-        viewModelScope.launch {
-            val response =
-                APIRepository.api.getMovieVideos(movieId, API_KEY, "en")
-            movieVideosLiveData.postValue(response.body()!!.videoList)
-        }
-    }
 
     fun getImages(movieId: Int) {
         viewModelScope.launch {
-            val response =
-                APIRepository.api.getImages(movieId, API_KEY, "en")
+            val response = detailRepository.getImages(movieId)
             imagesLiveData.postValue(response.body()!!.backdrops)
         }
     }
@@ -74,7 +61,9 @@ class DetailViewModel() : ViewModel() {
         return Resource.Error(response.message())
     }
 
-    private fun handleSimilarMovies(response: Response<MovieModelResponse>): Resource<List<MovieItemModel>> {
+    private fun handleSimilarMovies(
+        response: Response<MovieModelResponse>
+    ): Resource<List<MovieItemModel>> {
         if (response.isSuccessful) {
             response.body().let {
                 return Resource.Success(it!!.moviesList)
@@ -82,4 +71,39 @@ class DetailViewModel() : ViewModel() {
         }
         return Resource.Error(response.message())
     }
+
+    fun addToFavouriteMovies(movie: MovieEntity) {
+        viewModelScope.launch {
+            detailRepository.addMovieToLocaleRepository(movie)
+        }
+    }
+
+    fun deleteFromFavouriteMovies(movieId: Int) {
+        viewModelScope.launch {
+            detailRepository.deleteMovieFromLocaleRepository(movieId)
+        }
+    }
+
+
+    fun isMovieInFavourite(movieId: Int, callback: (Boolean) -> Unit) {
+        viewModelScope.launch {
+            val value = detailRepository.getSingleMovieById(movieId)
+            if (value != null) {
+                movieIsInFavourite = movieId == value.movieId
+                callback(movieIsInFavourite)
+            }
+        }
+    }
+
+    fun postRating(movieId: Int, rating: Double) {
+        viewModelScope.launch {
+            val response = detailRepository.setRating(movieId, rating)
+            ratingLiveData.postValue(response.toString())
+
+        }
+    }
+
+
+
+
 }
