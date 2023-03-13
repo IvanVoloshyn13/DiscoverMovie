@@ -14,6 +14,7 @@ import kotlinx.coroutines.launch
 import retrofit2.Response
 import java.util.*
 import javax.inject.Inject
+
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val movieService: MovieServices
@@ -39,8 +40,8 @@ class HomeViewModel @Inject constructor(
     fun getDiscoverMovies() {
         viewModelScope.launch {
             val response = movieService.discoverMovie(
-                API_KEY, Locale.getDefault().language,
-                SORT_BY_RELEASE_DATE_DESC, 1
+                Locale.getDefault().language,
+                SORT_BY_RELEASE_DATE_DESC
             )
             discoverMovieLiveData.postValue(response.body().let {
                 it!!.moviesList[0]
@@ -52,7 +53,8 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             upcomingMoviesLiveData.postValue(Resource.Loading())
             val response = movieService.getUpcomingMovies(
-                API_KEY, Locale.getDefault().language, upcomingMoviePage
+                Locale.getDefault().language,
+                upcomingMoviePage
             )
             upcomingMoviesLiveData
                 .postValue(handleUpcomingMovies(response))
@@ -63,7 +65,6 @@ class HomeViewModel @Inject constructor(
     fun getNowPlayingMovies() {
         viewModelScope.launch {
             val response = movieService.getNowPlayingMovies(
-                API_KEY,
                 Locale.getDefault().language,
                 nowPlayingMoviePage
             )

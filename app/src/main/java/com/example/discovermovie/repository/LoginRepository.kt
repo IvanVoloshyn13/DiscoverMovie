@@ -2,25 +2,35 @@ package com.example.discovermovie.repository
 
 import com.example.discovermovie.api.AuthenticationServices
 import com.example.discovermovie.data.authentication.*
-import com.example.discovermovie.data.movieModels.authentication.*
-import com.example.discovermovie.util.API_KEY
+import com.example.discovermovie.shared.SharedPreferencesStore
 import retrofit2.Response
 import javax.inject.Inject
 
-class LoginRepository @Inject constructor(val authService:AuthenticationServices) {
+class LoginRepository @Inject constructor(
+    private val authService: AuthenticationServices,
+    private val sharedPreferencesStore: SharedPreferencesStore
+) {
     suspend fun createRequestToken(): Response<TokenResponse> {
-        return authService.createToken(API_KEY)
+        return authService.createToken()
     }
 
     suspend fun createSessionWithLogin(body: AuthenticationRequest): Response<TokenResponse> {
-        return authService.authenticateAccount(API_KEY, body)
+        return authService.authenticateAccount(body)
     }
 
     suspend fun createSessionId(requestToken: RequestToken): Response<SessionIdResponse> {
-        return authService.createSessionId(API_KEY, requestToken)
+        return authService.createSessionId(requestToken)
     }
 
     suspend fun getAccDetails(sessionId: String): Response<UserResponse> {
-        return authService.getAccountDetail(API_KEY, sessionId)
+        return authService.getAccountDetail(sessionId)
     }
+
+    fun saveRequestToken(requestToken: String) {
+        sharedPreferencesStore.saveRequestToken(requestToken)
+    }
+
+    fun getRequestToken() = sharedPreferencesStore.getRequestToken()
+
+
 }

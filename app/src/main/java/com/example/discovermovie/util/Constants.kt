@@ -6,4 +6,5 @@ const val BASE_IMAGE_URL = "https://image.tmdb.org/t/p/"
 const val IMAGE_POSTER_SIZE_SMALL = "w342"
 const val IMAGE_POSTER_SIZE_BIG = "w500"
 const val IMAGE_POSTER_SIZE_ORIGINAL = "original"
-const val  SORT_BY_RELEASE_DATE_DESC="release_date.desc"
+const val SORT_BY_RELEASE_DATE_DESC = "release_date.desc"
+

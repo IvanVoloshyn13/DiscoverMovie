@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -18,13 +19,12 @@ import com.example.discovermovie.util.Resource
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class HomeFragment : Fragment(), HomeAdapter.OnItemClickListener {
+class HomeFragment  : Fragment(),
+    HomeAdapter.OnItemClickListener {
     private lateinit var binding: FragmentHomeBinding
     private lateinit var adapterUpcomingMovies: HomeAdapter
     private lateinit var adapterNowPlayingMovies: HomeAdapter
-    private  val homeViewModel: HomeViewModel by viewModels()
-
-
+    private val homeViewModel: HomeViewModel by viewModels()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -120,13 +120,6 @@ class HomeFragment : Fragment(), HomeAdapter.OnItemClickListener {
     }
 
 
-    companion object {
-
-        @JvmStatic
-        fun newInstance() =
-            HomeFragment()
-    }
-
     override fun onItemClick(movieId: Int) {
         val bundle = Bundle()
         bundle.putInt("MovieId", movieId)
@@ -134,6 +127,5 @@ class HomeFragment : Fragment(), HomeAdapter.OnItemClickListener {
             .navigate(R.id.action_homeFragment_to_detailsFragment, bundle)
 
     }
-
 
 }

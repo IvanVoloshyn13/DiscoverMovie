@@ -17,6 +17,7 @@
         android:drawableLeft="@drawable/ic_person"
         android:drawablePadding="6dp"
         android:hint="Email"
+        android:inputType="textEmailAddress"
         android:paddingStart="12dp"
         android:textColorHint="@color/white"
         tools:ignore="TouchTargetSizeCheck" />
@@ -33,6 +34,7 @@
         android:drawablePadding="6dp"
         android:hint="Password"
         android:paddingStart="12dp"
+        android:password="true"
         android:textColorHint="@color/white" />
 
     <LinearLayout

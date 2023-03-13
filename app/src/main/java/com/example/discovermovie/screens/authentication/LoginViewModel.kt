@@ -1,5 +1,6 @@
 package com.example.discovermovie.screens.authentication
 
+import android.content.SharedPreferences
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -17,7 +18,7 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val loginRepository: LoginRepository,
-    private val usersLocaleRepository: UsersLocaleRepository
+    private val usersLocaleRepository: UsersLocaleRepository,
 ) :
     ViewModel() {
 
@@ -55,14 +56,14 @@ class LoginViewModel @Inject constructor(
             )
         return if (response.isSuccessful) {
             sessionItRequestToken = RequestToken(requestToken!!)
-            sessionItRequestToken!!
+            loginRepository.saveRequestToken(sessionItRequestToken.request_token)
+            sessionItRequestToken
         } else null as RequestToken
 
     }
 
-    private suspend fun createSessionId(requestToken: RequestToken): String {
+    suspend fun createSessionId(requestToken: RequestToken): String {
         val response = loginRepository.createSessionId(requestToken)
-        Log.d("LOGIN", response.body()?.session_id!!.toString())
         return if (response.isSuccessful) {
             response.body()?.session_id!!
         } else response.message()
@@ -80,5 +81,9 @@ class LoginViewModel @Inject constructor(
         }
 
     }
+
+
+    fun getRequestTokenFromShared(): String? = loginRepository.getRequestToken()
+
 
 }
