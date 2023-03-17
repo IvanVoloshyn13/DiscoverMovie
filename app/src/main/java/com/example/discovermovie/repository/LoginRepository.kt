@@ -14,12 +14,15 @@ class LoginRepository @Inject constructor(
         return authService.createToken()
     }
 
-    suspend fun createSessionWithLogin(body: AuthenticationRequest): Response<TokenResponse> {
+    suspend fun authenticateAccount(body: AuthenticationRequest): Response<TokenResponse> {
         return authService.authenticateAccount(body)
     }
 
-    suspend fun createSessionId(requestToken: RequestToken): Response<SessionIdResponse> {
+    suspend fun createSessionId(requestToken: String): Response<SessionIdResponse> {
         return authService.createSessionId(requestToken)
+    }
+    suspend fun createSessionIdV4(accessToken: String): Response<SessionIdResponse> {
+        return authService.createSessionIdV4(accessToken)
     }
 
     suspend fun getAccDetails(sessionId: String): Response<UserResponse> {
@@ -31,6 +34,14 @@ class LoginRepository @Inject constructor(
     }
 
     fun getRequestToken() = sharedPreferencesStore.getRequestToken()
+
+    fun saveSessionId(sessionId: String) {
+        sharedPreferencesStore.saveSessionId(sessionId)
+    }
+
+    fun getSessionId() = sharedPreferencesStore.getSessionId()
+
+
 
 
 }

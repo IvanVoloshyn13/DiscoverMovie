@@ -1,17 +1,15 @@
 package com.example.discovermovie.screens.authentication
 
-import android.content.SharedPreferences
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.discovermovie.data.authentication.AuthenticationRequest
-import com.example.discovermovie.data.authentication.RequestToken
 import com.example.discovermovie.data.authentication.UserResponse
 import com.example.discovermovie.data.localeDataBase.UserEntity
 import com.example.discovermovie.repository.LoginRepository
 import com.example.discovermovie.repository.UsersLocaleRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -23,13 +21,16 @@ class LoginViewModel @Inject constructor(
     ViewModel() {
 
     val userLiveData = MutableLiveData<UserResponse>()
-    var requestToken: String? = null
-    private lateinit var sessionItRequestToken: RequestToken
+    lateinit var requestToken: String
+    lateinit var authToken: String
 
 
     fun userAuth(login: String, password: String) {
         viewModelScope.launch {
-            getAccDetails(createSessionId(login(login, password, createToken())))
+            val token = authAccount(login, password, createToken())
+            val sessionId = createSessionId(token)
+            getAccDetails(sessionId)
+         //   getAccDetails(createSessionId(authAccount(login, password, createToken())))
         }
     }
 
@@ -37,35 +38,32 @@ class LoginViewModel @Inject constructor(
     private suspend fun createToken(): String {
         val response =
             loginRepository.createRequestToken()
-        return if (response.isSuccessful) {
-            requestToken = response.body()?.request_token
-            requestToken!!
-        } else response.message()
+        return if (response.isSuccessful) ({
+            requestToken = response.body()!!.request_token
+        }).toString() else response.message()
     }
 
-    private suspend fun login(
+    private suspend fun authAccount(
         userName: String,
         password: String,
         token: String,
-    ): RequestToken {
-        val response =
-            loginRepository.createSessionWithLogin(
-                AuthenticationRequest(
-                    userName, password, token
-                )
-            )
-        return if (response.isSuccessful) {
-            sessionItRequestToken = RequestToken(requestToken!!)
-            loginRepository.saveRequestToken(sessionItRequestToken.request_token)
-            sessionItRequestToken
-        } else null as RequestToken
+    ): String {
+        val authenticationRequest = AuthenticationRequest(userName, password, token)
+        val response = loginRepository.authenticateAccount(authenticationRequest)
+        return if (response.code() == 200) {
+            authToken = response.body()!!.request_token
+            // loginRepository.saveRequestToken(authToken)
+            authToken
+        } else response.message()
 
     }
 
-    suspend fun createSessionId(requestToken: RequestToken): String {
+    suspend fun createSessionId(requestToken: String): String {
         val response = loginRepository.createSessionId(requestToken)
         return if (response.isSuccessful) {
-            response.body()?.session_id!!
+            var sessionId = response.body()?.session_id
+         //  loginRepository.saveSessionId(sessionId!!)
+            sessionId!!
         } else response.message()
 
     }
@@ -81,9 +79,6 @@ class LoginViewModel @Inject constructor(
         }
 
     }
-
-
-    fun getRequestTokenFromShared(): String? = loginRepository.getRequestToken()
 
 
 }
