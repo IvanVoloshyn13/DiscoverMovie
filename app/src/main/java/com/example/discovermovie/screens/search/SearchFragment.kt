@@ -28,20 +28,23 @@ class SearchFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentSearchBinding.inflate(inflater)
-        adapter = SearchAdapter()
-        binding.rvSearch.adapter = adapter
+        initRecycler()
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        search()
+    }
+
+    fun search() {
         binding.searchView.setOnQueryTextListener(object : OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 if (query?.length!! >= 1) {
                     //  var encodedQuery = URLEncoder.encode(query, "UTF-8")
                     searchViewModel.multiSearch(query)
                 }
-                return false
+                return true
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
@@ -50,6 +53,9 @@ class SearchFragment : Fragment() {
                     newText?.let { query ->
                         if (query.length >= 2) {
                             delay(searchDelay)
+                            searchViewModel.multiSearch(query)
+                        }
+                        if (query.isEmpty()) {
                             searchViewModel.multiSearch(query)
                         }
                     }
@@ -65,6 +71,11 @@ class SearchFragment : Fragment() {
             }
 
         }
+    }
+
+    fun initRecycler() {
+        adapter = SearchAdapter()
+        binding.rvSearch.adapter = adapter
     }
 
 

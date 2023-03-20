@@ -15,16 +15,11 @@
             app:destination="@id/moviesHome" />
         <action
             android:id="@+id/action_homeFragment_to_detailsFragment"
-            app:destination="@id/detailsFragment" />
+            app:destination="@id/navigation_detail" />
         <action
             android:id="@+id/action_homeFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
     </fragment>
-    <fragment
-        android:id="@+id/detailsFragment"
-        android:name="com.example.discovermovie.screens.details.DetailsFragment"
-        android:label="fragment_details"
-        tools:layout="@layout/fragment_details" />
     <fragment
         android:id="@+id/searchFragment"
         android:name="com.example.discovermovie.screens.search.SearchFragment"
@@ -32,7 +27,7 @@
         tools:layout="@layout/fragment_search">
         <action
             android:id="@+id/action_searchFragment_to_detailsFragment"
-            app:destination="@id/detailsFragment" />
+            app:destination="@id/navigation_detail" />
     </fragment>
     <fragment
         android:id="@+id/favouriteFragment"
@@ -41,7 +36,7 @@
         tools:layout="@layout/fragment_favourite">
         <action
             android:id="@+id/action_favouriteFragment_to_detailsFragment"
-            app:destination="@id/detailsFragment" />
+            app:destination="@id/navigation_detail" />
     </fragment>
     <fragment
         android:id="@+id/moviesHome"
@@ -50,7 +45,7 @@
         tools:layout="@layout/fragment_novies_home">
         <action
             android:id="@+id/action_moviesHome_to_detailsFragment"
-            app:destination="@id/detailsFragment" />
+            app:destination="@id/navigation_detail" />
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
@@ -60,4 +55,16 @@
             android:id="@+id/action_loginFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
     </fragment>
+    <navigation android:id="@+id/navigation_detail"
+        app:startDestination="@id/detailsFragment">
+        <fragment
+            android:id="@+id/detailsFragment"
+            android:name="com.example.discovermovie.screens.details.DetailsFragment"
+            android:label="fragment_details"
+            tools:layout="@layout/fragment_details" >
+            <action
+                android:id="@+id/action_detailsFragment_self"
+                app:destination="@id/detailsFragment" />
+        </fragment>
+    </navigation>
 </navigation>

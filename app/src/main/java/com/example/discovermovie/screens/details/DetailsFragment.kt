@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.findNavController
 import com.bumptech.glide.Glide
 import com.example.discovermovie.R
 import com.example.discovermovie.data.localeDataBase.MovieEntity
@@ -218,10 +219,7 @@ class DetailsFragment : Fragment(), HomeAdapter.OnItemClickListener {
         bundle.putInt("MovieId", movieId)
         val detailsFragment = DetailsFragment()
         detailsFragment.arguments = bundle
-        parentFragmentManager.beginTransaction().replace(R.id.main_container, detailsFragment)
-            .addToBackStack(null)
-            .setReorderingAllowed(true)
-            .commit()
+        requireView().findNavController().navigate(R.id.action_detailsFragment_self, bundle)
 
     }
 

@@ -15,17 +15,19 @@ import com.example.discovermovie.util.IMAGE_POSTER_SIZE_SMALL
 class SearchAdapter : RecyclerView.Adapter<SearchAdapter.SearchViewHolder>() {
     private val searchItemList = ArrayList<SearchResponseItem>()
 
-    class SearchViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class SearchViewHolder(itemView: View) : ViewHolder(itemView) {
         private val binding = LayoutSearchItemBinding.bind(itemView)
-
         fun bind(data: SearchResponseItem) {
             binding.apply {
-                tvMovieTitle.text = data.original_title
-                Glide.with(itemView)
-                    .load(BASE_IMAGE_URL + IMAGE_POSTER_SIZE_SMALL + data.poster_path)
-                    .into(ivMoviePosterSmall)
+                    tvMovieTitle.text = data.original_title
+                    tvMovieReleaseDate.text = data.release_date
+                    Glide.with(itemView)
+                        .load(BASE_IMAGE_URL + IMAGE_POSTER_SIZE_SMALL + data.poster_path)
+                        .into(ivMoviePosterSmall)
+
             }
         }
+
 
     }
 
@@ -48,5 +50,6 @@ class SearchAdapter : RecyclerView.Adapter<SearchAdapter.SearchViewHolder>() {
         searchItemList.addAll(list)
         notifyDataSetChanged()
     }
+
 
 }
