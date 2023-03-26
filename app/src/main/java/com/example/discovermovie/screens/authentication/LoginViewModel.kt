@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.discovermovie.data.authentication.AuthenticationRequest
+import com.example.discovermovie.data.authentication.BodyTokenRequest
 import com.example.discovermovie.data.authentication.UserResponse
 import com.example.discovermovie.data.localeDataBase.UserEntity
 import com.example.discovermovie.repository.LoginRepository
@@ -21,16 +22,16 @@ class LoginViewModel @Inject constructor(
     ViewModel() {
 
     val userLiveData = MutableLiveData<UserResponse>()
-    lateinit var requestToken: String
     lateinit var authToken: String
 
 
     fun userAuth(login: String, password: String) {
         viewModelScope.launch {
-            val token = authAccount(login, password, createToken())
-            val sessionId = createSessionId(token)
+            val reqToken = createToken()
+            val token = authAccount(login, password, reqToken)
+            val sessionId = createSessionId(BodyTokenRequest(token))
             getAccDetails(sessionId)
-         //   getAccDetails(createSessionId(authAccount(login, password, createToken())))
+            //   getAccDetails(createSessionId(authAccount(login, password, createToken())))
         }
     }
 
@@ -38,9 +39,11 @@ class LoginViewModel @Inject constructor(
     private suspend fun createToken(): String {
         val response =
             loginRepository.createRequestToken()
-        return if (response.isSuccessful) ({
-            requestToken = response.body()!!.request_token
-        }).toString() else response.message()
+        return if (response.isSuccessful) {
+            response.body()?.request_token!!
+        } else {
+            response.message()
+        }
     }
 
     private suspend fun authAccount(
@@ -58,12 +61,11 @@ class LoginViewModel @Inject constructor(
 
     }
 
-    suspend fun createSessionId(requestToken: String): String {
+    suspend fun createSessionId(requestToken: BodyTokenRequest): String {
         val response = loginRepository.createSessionId(requestToken)
         return if (response.isSuccessful) {
-            var sessionId = response.body()?.session_id
-         //  loginRepository.saveSessionId(sessionId!!)
-            sessionId!!
+            response.body()?.session_id!!
+            //  loginRepository.saveSessionId(sessionId!!)
         } else response.message()
 
     }
