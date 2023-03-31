@@ -1,5 +1,5 @@
 package com.example.discovermovie.data.authentication
 
-data class BodyTokenRequest(
+data class PostTokenBody(
     val request_token: String
 )

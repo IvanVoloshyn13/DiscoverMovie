@@ -12,7 +12,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class UserFragment : Fragment() {
     private lateinit var binding: FragmentUserBinding
-    private val loginViewModel: LoginViewModel by viewModels()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -25,12 +25,7 @@ class UserFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        loginViewModel.userLiveData.observe(viewLifecycleOwner) { user ->
-            binding.apply {
-                tvUserId.text = user.id.toString()
-                tvUsername.text = user.username
-            }
-        }
+
     }
 
 }

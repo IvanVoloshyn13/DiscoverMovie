@@ -1,41 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black"
     android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/tv_email"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/text_input_login_layout"
         android:layout_width="match_parent"
-        android:layout_height="36dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="18dp"
         android:layout_marginTop="104dp"
         android:layout_marginEnd="18dp"
-        android:background="@drawable/email_round_corners"
-        android:drawableLeft="@drawable/ic_person"
-        android:drawablePadding="6dp"
-        android:hint="Email"
-        android:inputType="textEmailAddress"
-        android:paddingStart="12dp"
         android:textColorHint="@color/white"
-        tools:ignore="TouchTargetSizeCheck" />
+        app:hintAnimationEnabled="true"
+        app:startIconDrawable="@drawable/ic_person"
+        app:startIconTint="@color/white">
 
-    <EditText
-        android:id="@+id/tv_password"
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/tv_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/email_round_corners"
+            android:hint="@string/login_hint"
+            android:inputType="text" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/text_input_password_layout"
         android:layout_width="match_parent"
-        android:layout_height="36dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="18dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="18dp"
         android:layout_marginEnd="18dp"
-        android:background="@drawable/email_round_corners"
-        android:drawableLeft="@drawable/ic_lock"
-        android:drawablePadding="6dp"
-        android:hint="Password"
-        android:paddingStart="12dp"
-        android:password="true"
-        android:textColorHint="@color/white" />
+        android:textColorHint="@color/white"
+        app:hintAnimationEnabled="true"
+        app:startIconDrawable="@drawable/ic_lock"
+        app:startIconTint="@color/white">
+
+        <EditText
+            android:id="@+id/tv_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/email_round_corners"
+            android:hint="Password"
+            android:inputType="textPassword"
+            android:textColorHint="@color/white" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -47,7 +63,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
-            android:checked="true"
+            android:checked="false"
             android:text="@string/remember_me"
             android:textColor="@color/white"
             android:textSize="16sp" />
@@ -58,12 +74,12 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:layout_marginEnd="12dp"
-            android:drawableLeft="@drawable/ic_lock_reset"
+            android:drawablePadding="6dp"
             android:paddingStart="10dp"
             android:text="Forget password?"
             android:textColor="@color/white"
             android:textSize="16sp"
-            android:drawablePadding="6dp"/>
+            app:drawableLeftCompat="@drawable/ic_lock_reset" />
     </LinearLayout>
 
     <TextView

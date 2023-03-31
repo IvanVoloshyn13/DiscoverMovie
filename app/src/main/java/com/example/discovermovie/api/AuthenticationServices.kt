@@ -1,6 +1,8 @@
 package com.example.discovermovie.api
 
 import com.example.discovermovie.data.authentication.*
+import com.example.discovermovie.data.user.UserResponse
+import com.example.discovermovie.util.BaseApiResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -22,7 +24,7 @@ interface AuthenticationServices {
 
     @POST("3/authentication/session/new")
     suspend fun createSessionId(
-        @Body request_token: BodyTokenRequest
+        @Body request_token: PostTokenBody
     ): Response<SessionIdResponse>
 
     @POST("3/authentication/session/convert/4")

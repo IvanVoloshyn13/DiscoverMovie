@@ -1,4 +1,4 @@
-package com.example.discovermovie.data.localeDataBase
+package com.example.discovermovie.data.user
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

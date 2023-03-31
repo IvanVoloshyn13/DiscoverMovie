@@ -51,8 +51,6 @@ class APIModule {
     fun provideHttpClient(
         apiInterceptor: Interceptor,
         loggingInterceptor: HttpLoggingInterceptor
-       // authInterceptor: AuthInterceptor
-        //  tokenInterceptor: ErrorsHandlingInterceptor
     ): OkHttpClient =
         OkHttpClient.Builder()
             .addInterceptor(apiInterceptor)
@@ -72,8 +70,5 @@ class APIModule {
     fun provideMovieServices(retrofit: Retrofit): MovieServices =
         retrofit.create(MovieServices::class.java)
 
-    companion object {
-        const val API_ACCESS_TOKEN =
-            "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJlMmMyNDI1ODkyMGJhMDYwOTZlZDIyM2EyNTkzMTU4YiIsInN1YiI6IjYzNjdhZGQyNjUxZmNmMDA3YjBkZjA4YSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.1de3bptAPDtptMPQokIYO5IfGiBne6oCzePytKMBuFQ"
-    }
+
 }

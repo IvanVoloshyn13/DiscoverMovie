@@ -1,6 +1,6 @@
-package com.example.discovermovie.data.authentication
+package com.example.discovermovie.data.user
 
-data class UserResponse(
+data class User(
     val id: Int,
     val include_adult: Boolean,
     val name: String,
