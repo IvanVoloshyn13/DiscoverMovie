@@ -2,6 +2,7 @@ package com.example.discovermovie.api
 
 import com.example.discovermovie.data.movieModels.details.MovieDetailsModel
 import com.example.discovermovie.data.movieModels.images.ImagesResponse
+import com.example.discovermovie.data.movieModels.search.SearchResponse
 import com.example.discovermovie.data.movieModels.simpleMovieModel.MovieModelResponse
 import com.example.discovermovie.data.movieModels.videoModel.VideoResponse
 import okhttp3.ResponseBody
@@ -61,5 +62,10 @@ interface MovieServices {
         @Body value: Double,
     ): Response<ResponseBody>
 
+    @GET("3/search/multi")
+    suspend fun multiSearch(
+        @Query("query") query: String,
+        @Query("page") page: Int
+    ): Response<SearchResponse>
 
 }

@@ -1,6 +1,6 @@
 package com.example.discovermovie.repository
 
-import com.example.discovermovie.data.localeDataBase.UserEntity
+import com.example.discovermovie.data.user.UserEntity
 import com.example.discovermovie.database.MovieDatabase
 import javax.inject.Inject
 

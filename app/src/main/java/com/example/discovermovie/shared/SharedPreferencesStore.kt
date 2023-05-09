@@ -18,8 +18,21 @@ class SharedPreferencesStore @Inject constructor(@ApplicationContext context: Co
 
     fun getRequestToken() = sharedPreferences.getString(TOKEN_KEY, null)
 
+
+    fun saveSessionId(sessionId: String) {
+        val sharedEditor = sharedPreferences.edit()
+        sharedEditor.putString(SESSION_ID, sessionId)
+        sharedEditor.commit()
+    }
+
+    fun getSessionId() = sharedPreferences.getString(SESSION_ID, null)
+
     companion object {
         const val SHARED_PREF_KEY = "SharedKey"
         const val TOKEN_KEY = "RequestToken"
+        const val SESSION_ID = "SessionId"
+
     }
+
+
 }

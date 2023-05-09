@@ -6,9 +6,12 @@ plugins {
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.dagger.hilt.android'
 
+
 android {
     namespace 'com.example.discovermovie'
     compileSdk 33
+
+
 
 
     defaultConfig {
@@ -24,7 +27,7 @@ android {
     buildTypes {
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+           proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
     compileOptions {
@@ -37,6 +40,7 @@ android {
     buildFeatures {
         viewBinding true
     }
+
 }
 
 dependencies {
@@ -101,6 +105,8 @@ dependencies {
     // define any required OkHttp artifacts without version
     implementation("com.squareup.okhttp3:okhttp")
     implementation("com.squareup.okhttp3:logging-interceptor")
+
+
 
 
 }
