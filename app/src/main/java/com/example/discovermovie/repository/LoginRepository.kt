@@ -2,25 +2,29 @@ package com.example.discovermovie.repository
 
 import com.example.discovermovie.api.AuthenticationServices
 import com.example.discovermovie.data.authentication.*
+import com.example.discovermovie.data.user.UserResponse
 import com.example.discovermovie.shared.SharedPreferencesStore
+import com.example.discovermovie.util.BaseApiResponse
+import com.example.discovermovie.util.Resource
 import retrofit2.Response
 import javax.inject.Inject
+
 
 class LoginRepository @Inject constructor(
     private val authService: AuthenticationServices,
     private val sharedPreferencesStore: SharedPreferencesStore
-) {
-    suspend fun createRequestToken(): Response<TokenResponse> {
-        return authService.createToken()
+) : BaseApiResponse() {
+    suspend fun createRequestToken() = authService.createToken()
+
+
+    suspend fun authenticateAccount(body: AuthenticationRequest): Resource<TokenResponse> {
+        return safeApiCall { authService.authenticateAccount(body) }
     }
 
-    suspend fun authenticateAccount(body: AuthenticationRequest): Response<TokenResponse> {
-        return authService.authenticateAccount(body)
+    suspend fun createSessionId(requestToken: PostTokenBody): Response<SessionIdResponse> {
+        return authService.createSessionId(request_token = requestToken)
     }
 
-    suspend fun createSessionId(requestToken: String): Response<SessionIdResponse> {
-        return authService.createSessionId(requestToken)
-    }
     suspend fun createSessionIdV4(accessToken: String): Response<SessionIdResponse> {
         return authService.createSessionIdV4(accessToken)
     }
@@ -40,8 +44,6 @@ class LoginRepository @Inject constructor(
     }
 
     fun getSessionId() = sharedPreferencesStore.getSessionId()
-
-
 
 
 }
