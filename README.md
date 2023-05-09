@@ -10,4 +10,4 @@ the local database
 ![Screenshot_2023-05-09-16-57-48-071_com example discovermovie](https://github.com/IvanVoloshyn13/DiscoverMovie/assets/110664951/6e870668-7c81-4cdf-959a-0dc36e376552)
 
 ##  Used Technologies
-Kotlin, Hilt Dependency Injection , Coroutines, Flow,MVVM Retrofit, Room
+Kotlin, Hilt Dependency Injection , Coroutines, Flow, MVVM, Retrofit, Room
